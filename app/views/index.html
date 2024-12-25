@@ -10,12 +10,39 @@
                 height: 100vh;
                 margin: 0;
                 display: flex;
+                flex-direction: column;
                 align-items: center;
                 justify-content: center;
             }
         </style>
+
+    <!-- Must be present for all back to front communication -->
+    <script src="./scripts/qwebchannel.js"></script>
+    
+    <script>
+        let backend;
+
+        new QWebChannel(qt.webChannelTransport, function(channel) {
+            backend = channel.objects.backend;
+
+            // Listen for data from Python
+            backend.sendDataToJs.connect(function(message) {
+                document.getElementById("output").innerText = message;
+            });
+        });
+
+
+        // Send data to Python
+        function sendToPython() {
+            const input = document.getElementById("input").value;
+            backend.receiveFromJs(input);
+        }
+    </script>
     </head>
     <body>
-        <h1>Hello World!</h1>
+        <h1>Python and HTML Interaction</h1>
+        <input type="text" id="input" placeholder="Enter a message" />
+        <button onclick="sendToPython()">Send to Python</button>
+        <p id="output"></p>
     </body>
 </html>
