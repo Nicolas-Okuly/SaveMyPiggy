@@ -2,9 +2,9 @@
 # Imports
 from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout
 from PyQt5.QtCore import QUrl
-from PyQt5.QtWebEngineWidgets import QWebEngineView
+from PyQt5.QtWebEngineWidgets import QWebEngineView, QWebEngineSettings
 from PyQt5.QtWebChannel import QWebChannel
-from .backend import Backend
+from .backend import *
 import sys, os
 
 # Get the absolute path to the resource, for PyInstaller
@@ -18,25 +18,45 @@ class WebApp(QMainWindow):
     def __init__(self):
         # Set window title and window geometry
         super().__init__()
-        self.setWindowTitle("Hello World!")
+        self.setWindowTitle("Finance Tracker")
         self.setGeometry(100, 100, 800, 600)
 
         # Initialize the webview and load the html files
         webview = QWebEngineView()
+        # webview.setContextMenuPolicy(False)
         start_page = resource_path("views/index.html")
         webview.setUrl(QUrl(f"file:///{start_page}"))
 
+        # Enable CORs
+        settings = webview.settings()
+        settings.setAttribute(QWebEngineSettings.LocalContentCanAccessRemoteUrls, True)
+        settings.setAttribute(QWebEngineSettings.LocalContentCanAccessFileUrls, True)
+
+
         # Set up the web channel
         self.channel = QWebChannel()
-        self.backend = Backend()
 
-        # Connect the backend object to the channel
-        self.channel.registerObject("backend", self.backend)
+        # Link objects to WebApp
+        self.testBackend = BackendTest()
+        self.balance = BalanceData()
+        self.sendTrans = sendTransHistory()
+        self.updateGraphs = updateGraph()
+        self.receiveTransaction = receiveTransaction()
+
+        # Register the objects for use in the backend
+        self.channel.registerObject("testBackend", self.testBackend)
+        self.channel.registerObject("balance", self.balance)
+        self.channel.registerObject("sendTrans", self.sendTrans)
+        self.channel.registerObject("updateGraphs", self.updateGraphs)
+        self.channel.registerObject("receiveTransaction", self.receiveTransaction)
+
+        # Set the channel to the page
         webview.page().setWebChannel(self.channel)
 
         # Load the layout of the page
         container = QWidget()
         layout = QVBoxLayout()
+        layout.setContentsMargins(0, 0, 0, 0) # Destroy the margins
         layout.addWidget(webview)
         container.setLayout(layout)
         self.setCentralWidget(container)

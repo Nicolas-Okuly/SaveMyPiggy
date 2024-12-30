@@ -3,46 +3,184 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <style>
-            body {
-                background-color: #eee;
-                font-size: 2em;
-                height: 100vh;
-                margin: 0;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
-            }
-        </style>
 
-    <!-- Must be present for all back to front communication -->
-    <script src="./scripts/qwebchannel.js"></script>
-    
-    <script>
-        let backend;
+        <link rel="stylesheet" href="./styles.css">
 
-        new QWebChannel(qt.webChannelTransport, function(channel) {
-            backend = channel.objects.backend;
+        <!-- Must be present for all back to front communication -->
+        <script src="./scripts/qwebchannel.js"></script>
 
-            // Listen for data from Python
-            backend.sendDataToJs.connect(function(message) {
-                document.getElementById("output").innerText = message;
-            });
-        });
+        <script src="./scripts/transactions.js" defer></script>
+        <script src="./scripts/communication.js" defer></script>
+        <script src="./scripts/blur.js"></script>
 
-
-        // Send data to Python
-        function sendToPython() {
-            const input = document.getElementById("input").value;
-            backend.receiveFromJs(input);
-        }
-    </script>
     </head>
     <body>
-        <h1>Python and HTML Interaction</h1>
-        <input type="text" id="input" placeholder="Enter a message" />
-        <button onclick="sendToPython()">Send to Python</button>
-        <p id="output"></p>
+        <!-- Button to blur sensitive data -->
+        <button id="blur" title="Hide sensitive information" onclick="blurAll()"><img id="blurBtn" width="50px" src="./icons/eye-slash.svg" alt="Toggle visibility"></button>
+
+        <!-- Navigation -->
+        <nav>
+            <a href="#bkmrk1">Income and Expense</a>
+            <a href="#bkmrk2">Transaction History</a>
+        </nav>
+
+        <!-- Application Header -->
+        <header>
+            <div>
+                <h1>Finance Tracker</h1>
+                <!-- Show balance -->
+                <h2 id="current_balance">Your current balance is: </h2>
+            </div>
+
+            <!-- Piggybank Icon -->
+            <img src="./icons/piggybank.svg" alt="Piggybank">            
+        </header>
+
+        <!-- Main body container -->
+        <main class="container">
+
+            <!-- Quick actions -->
+            <div class="quick-actions">
+                <h2>Quick Actions</h2>
+                <div>
+                    <h3>Most Recent Transaction</h3>
+                    <h4 id="mrt-name">Bananas</h4>
+                    <p><span id="mrt-amt" class="money">$234.34</span></p>
+                    <p>Date: <span id="mrt-date">10/24/25</span></p>
+                    <p>Category: <span id="mrt-cat">Shopping</span></p>
+                </div>
+
+                <div>
+                    <h3>Add a transaction</h3>
+                    <p>Click the button below to add a transaction and recalculate your spending data.</p>
+                    <button>Add transaction</button>
+                </div>
+
+                <div>
+                    <h3>Help</h3>
+                    <p>Click on the link below if you need help learning how to use this application.</p>
+                    <a href="/help">Help</a>
+                </div>
+            </div>
+
+            <!-- Add a transaction modal -->
+            <div class="transaction-modal">
+                <form id="transaction-form">
+                    <p class="red">* Indicates required values.</p>
+                    
+                    <label for="trans-name" class="required">Transaction Name:</label>
+                    <input name="name" id="trans-name" type="text" required>
+
+                    <label for="trans-amt" class="required">Transaction Amount:</label>
+                    <input name="amount" type="number" id="trans-amt" required>
+
+                    <label for="trans-date" class="required">Transaction Date:</label>
+                    <input name="date" type="date" id="trans-date" required>
+
+                    <label for="trans-category" class="required">Transaction Category:</label>
+                    <select name="category" id="trans-category" required>
+                        <option value="" selected disabled>Select an option</option>
+                        <option value="createnew">Create new</option>
+                        <option value="banana">Bananas</option>
+                    </select>
+
+                    <script>
+                        document.getElementById("trans-category").addEventListener("change", event => {
+                            if (event.target.value == "createnew") {
+                                document.getElementById("hidden-new-cat").classList.remove("hidden");
+                                document.getElementById("trans-new-category").setAttribute("required", "true");
+                            } else {
+                                document.getElementById("hidden-new-cat").classList.add("hidden");
+                                document.getElementById("trans-new-category").removeAttribute("required");
+                            }
+                        });
+                    </script>
+
+                    <div class="hidden" id="hidden-new-cat">
+                        <label for="trans-new-category" class="required">New Category Name:</label>
+                        <input name="new-category" type="text" id="trans-new-category">
+                    </div>
+
+                    <label for="trans-type" class="required">Transaction Type:</label>
+                    <select name="type" id="trans-type">
+                        <option value="income">Income</option>
+                        <option value="expense">Expense</option>
+                    </select>
+
+                    <button type="submit">Add transaction</button>
+                </form>
+            </div>
+
+            <!-- Income and Expense Data -->
+            <div class="graphs">
+                <!-- Income vs Expense graph and data -->
+                <h2 id="bkmrk1">Income and Expenses Data</h2>
+                <select name="inc-exp-filt" id="income-filter">
+                    <option value="alltime">All time</option>
+                    <option value="week">Last week</option>
+                    <option value="month">Last month</option>
+                    <option value="year">Last year</option>
+                </select>
+
+                <div class="graph-container">
+
+                    <!-- Income Pie Chart -->
+                    <div class="chart">
+                        <div class="money">
+                            <h3>Income: <span id="income">$</span></h3>
+                            <h4>Income by category:</h4>
+                            <ul id="income-cats">
+
+                            </ul>
+                        </div>
+                        <img class="money" src="./graphs/income-pie.svg" alt="Income Pie Graph">
+                    </div>
+
+                    <!-- Expense Pie Chart -->
+                    <div class="chart">
+                        <div class="money">
+                            <h3>Expenses: <span id="expense">$</span></h3>
+                            <h4>Expense by category:</h4>
+                            <ul id="expense-cats">
+                            
+                            </ul>
+                        </div>
+                        <img class="money" id="expensegraph" src="./graphs/expense-pie.svg" alt="Expenses Pie Graph">
+                    </div>
+
+                    <!-- Income vs Expenses Bar -->
+                    <div class="chart">
+                        <img src="./graphs/incomevexpense.svg" alt="Income vs Expenses Bar Graph" id="incvexpgraph" class="money">
+                    </div>
+                </div>
+            </div>
+
+            <br>
+
+            <!-- Transaction History -->
+            <div class="trans-hist">
+                <h2 id="bkmrk2">Transcation History</h2>
+
+                <!-- Search Parameters -->
+                <input type="text" id="trans-search" placeholder="Search for transactions">
+
+                <select name="trans-select" id="trans-select">
+                    <option value="sao">Select an option</option>
+                </select>
+
+                <!-- Table of History -->
+                <table id="hist-table">
+                    <tr>
+                        <th>Transaction Name</th>
+                        <th>Amount</th>
+                        <th>Balance</th>
+                        <th>Date</th>
+                        <th>Category</th>
+                        <th>Type</th>
+                        <th>Action</th>
+                    </tr>
+                </table>
+            </div>
+        </main>
     </body>
 </html>

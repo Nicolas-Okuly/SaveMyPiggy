@@ -1,0 +1,186 @@
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300..700&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+:root {
+    --light-background: #F4F7FA;
+    --element-background: #E0E5E8;
+    --dark-background: #2C3E50;
+    --accent-color: #27AE60;
+    --header-color: #1F2A44;
+    --text-color: #000000;
+    --header-font: Poppins, Helvetica, sans-serif;
+    --body-font: "Open Sans", Verdana, sans-serif;
+    --financial-font: "Fira Code", monospace;
+}
+
+/* Default global values */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    user-select: none;
+    -webkit-user-drag: none;
+}
+body {
+    background-color: var(--light-background);
+    color: var(--text-color);
+    font-family: var(--body-font);
+    font-size: 15px;
+}
+
+/* Set the scrollbar */
+body::-webkit-scrollbar {
+    width: 0.5em;
+}
+body::-webkit-scrollbar-track {
+    background-color: var(--element-background);
+}
+body::-webkit-scrollbar-thumb {
+    background-color: var(--dark-background);
+    opacity: 0.9;
+    outline: none;
+    border: none;
+}
+
+/* Set fonts */
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--header-font);
+    color: var(--header-color)
+}
+.money {
+    font-family: var(--financial-font);
+}
+
+.hidden {
+    display: none;
+}
+
+/* Navbar */
+nav {
+    position: sticky;
+    z-index: 99;
+    top: 0;
+    background-color: var(--dark-background);
+    width: 100%;
+    padding: 12px;
+    display: flex;
+    justify-content: space-evenly;
+}
+nav a, nav a:visited {
+    color: var(--accent-color);
+    text-decoration: none;
+    font-size: 1.2em;
+}
+nav a:hover {
+    color: #21884c;
+    text-decoration: underline;
+}
+
+@media (max-width: 786px) {
+    nav {
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
+/* Style the header at the top of the page */
+header {
+    background-color: var(--element-background);
+    text-align: right;
+    padding: 15px;
+    font-size: 1.2em;
+    color: var(--text-color);
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+}
+header img {
+    width: 100px;
+}
+.vert-line {
+    height: 100%;
+    border: 1px solid black;
+}
+@media (max-width: 630px) {
+    header {
+        text-align: left;
+    }
+}
+
+/* Button to blur sensetive data in the bottom right corner */
+#blur {
+    position: fixed;
+    background-color: var(--accent-color);
+    border: none;
+    padding: 12px;
+    border-radius: 100%;
+    bottom: 15px;
+    right: 15px;
+}
+#blur:focus {
+    outline: none;
+}
+
+/* Set expenses or negative values to red and bold */
+.red {
+    color: red;
+    font-weight: bold;
+}
+
+.container h2 {
+    text-align: center;
+    background-color: var(--dark-background);
+    color: white;
+    padding: 12px;
+    font-size: 1.7em;
+}
+.graph-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    padding: 15px;
+    font-size: 1.5rem;
+    gap: 10px;
+}
+.chart {
+    background-color: var(--element-background);
+    padding: 15px;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.chart ul {
+    list-style-type: none;
+}
+.chart > img {
+    width: 25vw;
+    justify-self: center;
+    align-self: center;
+}
+
+@media (max-width: 1000px) {
+    .graph-container {
+        grid-template-columns: 1fr;
+        font-size: 1.2rem;
+    }
+    .chart {
+        width: fit-content;
+        margin: 0 auto;
+    }
+    .chart > img {
+        width: 75vw;
+    }
+}
+
+/* Style the transaction history table */
+#hist-table {
+    border-collapse: collapse;
+    border: 1px solid black;
+}
+#hist-table td, #hist-table th {
+    text-transform: capitalize;
+    border: 1px solid black;
+    padding: 3px;
+}
+#hist-table tr:nth-child(even) { background-color: var(--element-background); }
+#hist-table tr:hover td { background-color: #EEE; }
