@@ -10,7 +10,12 @@ import sys, os
 # Get the absolute path to the resource, for PyInstaller
 def resource_path(relative_path):
     base_path = getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(__file__)))
+
+    system = platform.system()
+    if system == "Windows":
+        return os.path.join(base_path, relative_path).replace("%5C", "/")
     return os.path.join(base_path, relative_path)
+
 
 # WebApp Class
 class WebApp(QMainWindow):
@@ -24,14 +29,14 @@ class WebApp(QMainWindow):
         # Initialize the webview and load the html files
         webview = QWebEngineView()
         # webview.setContextMenuPolicy(False)
-        start_page = resource_path("views/index.html")
-        webview.setUrl(QUrl(f"file:///{start_page}"))
+        start_page = resource_path("views\index.html").replace('\\', '/')
+        print(start_page)
+        webview.setUrl(QUrl(f"{start_page}"))
 
         # Enable CORs
         settings = webview.settings()
         settings.setAttribute(QWebEngineSettings.LocalContentCanAccessRemoteUrls, True)
         settings.setAttribute(QWebEngineSettings.LocalContentCanAccessFileUrls, True)
-
 
         # Set up the web channel
         self.channel = QWebChannel()
@@ -61,9 +66,10 @@ class WebApp(QMainWindow):
         container.setLayout(layout)
         self.setCentralWidget(container)
 
+
 # Declare the startup app
 def RunApp():
-    # Initalize and application and start it
+    # Initialize and application and start it
     app = QApplication(sys.argv)
     main_window = WebApp()
     main_window.show()

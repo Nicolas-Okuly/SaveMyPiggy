@@ -176,15 +176,16 @@ class sendTransHistory(QObject):
                             "date": date,
                             "after": after_balance,
                         }
+
                         transaction_history.append(transaction)
                     except (ValueError, KeyError) as e:
                         print(f"Skipping invalid row: {row}, error: {e}")
 
             # Emit the transaction history as a JSON string
-            self.sendTransHistory.emit(f"{transaction_history}")
+            self.sendTransHistory.emit(f"{str(transaction_history)}")
         except Exception as e:
             print(f"Error reading the file {self.csv_file_path}: {e}")
-            self.sendTransHistory.emit("[]")
+            self.sendTransHistory.emit([])
 
         # # Transaction history needs to meet the template below
         # exampleHistory = [

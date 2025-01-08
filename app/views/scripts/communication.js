@@ -4,7 +4,6 @@ let sendTrans;
 let updateGraphs;
 let receiveTransaction;
 
-
 // Create the web channel
 new QWebChannel(qt.webChannelTransport, function (channel) {
     /*
