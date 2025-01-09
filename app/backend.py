@@ -166,7 +166,7 @@ class sendTransHistory(QObject):
                         running_balance += cost
 
                         # Use the existing 'after' value if valid, otherwise calculate dynamically
-                        after_balance = float(row["after"]) if "after" in row and row["after"] else running_balance
+                        # after_balance = float(row["after"]) if "after" in row and row["after"] else running_balance
 
                         transaction = {
                             "name": row["name"],
@@ -174,7 +174,7 @@ class sendTransHistory(QObject):
                             "category": row["category"],
                             "type": row["type"],
                             "date": date,
-                            "after": after_balance,
+                            "after": row["after"],
                         }
 
                         transaction_history.append(transaction)
@@ -215,13 +215,23 @@ class receiveTransaction(QObject):
 
         # Add a transaction to the users transactions
 
-        transaction = {
-            "name": data[0],
-            "amount": data[1],
-            "category": data[2],
-            "type": data[3],
-            "date": data[4],
-        }
+        try:
+            with open(self.csv_file_path, mode='r') as file:
+                reader = csv.DictReader(file)
+                if reader[-1]: last_balance = reader[-1]["after"]
+                else: last_balance = 0
+
+                transaction = {
+                    "name": data[0],
+                    "amount": data[1],
+                    "category": data[2],
+                    "type": data[3],
+                    "date": data[4],
+                    "after": last_balance + data[1],
+                }
+        except Exception as e:
+            print(f"Error reading the file {self.csv_file_path}: {e}")
+            self.receiveTransaction.emit(False)
 
         with open(self.csv_file_path, mode='a', newline='') as file:
             writer = csv.DictWriter(file)
@@ -233,9 +243,11 @@ class receiveTransaction(QObject):
 # For updating graphs in views/graphs
 class updateGraph(QObject):
     updateGraphSignal = pyqtSignal(bool)
+    csv_file_path = os.path.join(get_appdata_folder(), "transactionData.csv")
 
     def __init__(self):
         super().__init__()
+        create_file_if_absent(self, self.csv_file_path)
 
     @pyqtSlot(str)
     def updateGraph(self, date):
@@ -247,23 +259,49 @@ class updateGraph(QObject):
         # Insert functions that will update all the graphs
         graphs = GraphGenerator()
 
-        graphs.incvexpGraph(2393.23, 2251.36) # Make sure function that pulls balance data happens here
+        # Initialize accumulators
+        total_income = 0.0
+        total_expense = 0.0
+
+        income_categories = defaultdict(float)
+        expense_categories = defaultdict(float)
+
+        try:
+            with open(self.csv_file_path, mode='r') as file:
+                reader = csv.DictReader(file)
+                for row in reader:
+                    amount = float(row["amount"])
+                    category = row["category"]
+                    if row["type"] == "Income":
+                        total_income += amount
+                        income_categories[category] += amount
+                    elif row["type"] == "Expense":
+                        total_expense += amount
+                        expense_categories[category] += amount
+
+            # Emit the transaction history as a JSON string
+        except Exception as e:
+            print(f"Error reading the file {self.csv_file_path}: {e}")
+            self.updateGraphSignal.emit(False)
+
+        graphs.incvexpGraph(total_income, total_expense) # Make sure function that pulls balance data happens here
 
         # Make sure these are properly formatted with the transaction list
-        graphs.ExpenseCatPie([342, 546, 983.34], ["Automobile", "Food", "Shopping"])
+        graphs.ExpenseCatPie(list(expense_categories.values()), list(expense_categories.keys()))
 
         # Make sure these are properly formatted with the transaction list
-        graphs.IncomeCatPie([1000, 120.12, 45.65], ["Paycheck", "Tax Return", "Refunds"])
+        graphs.IncomeCatPie(list(income_categories.values()), list(income_categories.keys()))
         self.updateGraphSignal.emit(True)
+
 
 class editTransaction(QObject):
     editTransactionSignal = pyqtSignal(bool)
 
     def __init__(self):
         super().__init__()
-    
+
     @pyqtSlot(str)
-    def updateTransaction(self, data):
+    def updateTransaction(self, old_data, new_data):
         '''
             data will look roughly like this:
             [ "Transaction Name", "Transaction Amount", "Transaction Category", "Transaction Type", "Transaction Date" ]
@@ -273,12 +311,13 @@ class editTransaction(QObject):
 
         self.editTransactionSignal.emit(True)
 
+
 class deleteTransaction(QObject):
     deleteTransactionSignal = pyqtSignal(bool)
 
     def __init__(self):
         super().__init__()
-    
+
     @pyqtSlot(str)
     def deleteTransaction(self, data):
         '''
