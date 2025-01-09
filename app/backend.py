@@ -255,3 +255,37 @@ class updateGraph(QObject):
         # Make sure these are properly formatted with the transaction list
         graphs.IncomeCatPie([1000, 120.12, 45.65], ["Paycheck", "Tax Return", "Refunds"])
         self.updateGraphSignal.emit(True)
+
+class editTransaction(QObject):
+    editTransactionSignal = pyqtSignal(bool)
+
+    def __init__(self):
+        super().__init__()
+    
+    @pyqtSlot(str)
+    def updateTransaction(self, data):
+        '''
+            data will look roughly like this:
+            [ "Transaction Name", "Transaction Amount", "Transaction Category", "Transaction Type", "Transaction Date" ]
+
+            idk how you want to find it but I gave you the info
+        '''
+
+        self.editTransactionSignal.emit(True)
+
+class deleteTransaction(QObject):
+    deleteTransactionSignal = pyqtSignal(bool)
+
+    def __init__(self):
+        super().__init__()
+    
+    @pyqtSlot(str)
+    def deleteTransaction(self, data):
+        '''
+            data will look roughly like this:
+            [ "Transaction Name", "Transaction Amount", "Transaction Category", "Transaction Type", "Transaction Date" ]
+
+            idk how you want to find it but I gave you the info
+        '''
+
+        self.deleteTransactionSignal.emit(True)
