@@ -16,7 +16,6 @@ new QWebChannel(qt.webChannelTransport, function (channel) {
 
     sendBalance.sendBalanceData.connect(function (message) {
         // Format the message to JSON and send it to the handler function.
-        message = message.replaceAll("'", '"');
         handleBalData(JSON.parse(message));
     });
 
@@ -32,7 +31,6 @@ new QWebChannel(qt.webChannelTransport, function (channel) {
 
     sendTrans.sendTransHistory.connect(function (message) {
         // Format the message to JSON and send it to the handler function.
-        message = message.replaceAll("'", '"');
         handleTransData(JSON.parse(message));
     });
 

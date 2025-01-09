@@ -4,6 +4,7 @@ from .graphGenerator import GraphGenerator
 import os
 import platform
 import csv
+import json
 from collections import defaultdict
 from datetime import datetime
 
@@ -109,7 +110,7 @@ class BalanceData(QObject):
         }
 
         # Emit the balance data as a JSON string
-        self.sendBalanceData.emit(f'{balance_data}')
+        self.sendBalanceData.emit(json.dumps(balance_data)) 
 
         # # Formatted as suggested below
         # # Income and expense categories should be the same as the graphs
@@ -167,6 +168,10 @@ class sendTransHistory(QObject):
 
                         # Use the existing 'after' value if valid, otherwise calculate dynamically
                         # after_balance = float(row["after"]) if "after" in row and row["after"] else running_balance
+                        if (row["type"] == "expense"): after_balance = float(row["amount"]) - float(row["amount"])*2
+                        else: after_balance = row["amount"]
+
+                        # after_balance = float(row["after"]) if "after" in row and row["after"] else running_balance
 
                         transaction = {
                             "name": row["name"],
@@ -182,7 +187,7 @@ class sendTransHistory(QObject):
                         print(f"Skipping invalid row: {row}, error: {e}")
 
             # Emit the transaction history as a JSON string
-            self.sendTransHistory.emit(f"{str(transaction_history)}")
+            self.sendTransHistory.emit(json.dumps(transaction_history))
         except Exception as e:
             print(f"Error reading the file {self.csv_file_path}: {e}")
             self.sendTransHistory.emit([])
