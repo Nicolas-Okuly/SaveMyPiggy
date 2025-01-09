@@ -223,9 +223,7 @@ class receiveTransaction(QObject):
         try:
             with open(self.csv_file_path, mode='r') as file:
                 reader = csv.DictReader(file)
-                if reader[-1]: last_balance = reader[-1]["after"]
-                else: last_balance = 0
-
+                last_balance = reader[-1]["after"]
                 transaction = {
                     "name": data[0],
                     "amount": data[1],
@@ -236,7 +234,6 @@ class receiveTransaction(QObject):
                 }
         except Exception as e:
             print(f"Error reading the file {self.csv_file_path}: {e}")
-            self.receiveTransaction.emit(False)
 
         with open(self.csv_file_path, mode='a', newline='') as file:
             writer = csv.DictWriter(file)
