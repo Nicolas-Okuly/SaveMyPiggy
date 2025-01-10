@@ -36,12 +36,24 @@ def get_appdata_folder():
 
 
 # Check if the CSV file exists; if not, create an empty one
-def create_file_if_absent(self, csv_file_path):
-    if not os.path.exists(self.csv_file_path):
-        print(f"File {self.csv_file_path} not found. Creating a new one.")
-        with open(self.csv_file_path, mode='w', newline='') as file:
+def create_file_if_absent(csv_file_path):
+    if not os.path.exists(csv_file_path):
+        print(f"File {csv_file_path} not found. Creating a new one.")
+        with open(csv_file_path, mode='w', newline='') as file:
             writer = csv.DictWriter(file, fieldnames=["name", "type", "category", "amount", "date", "after"])
             writer.writeheader()  # Write header if file is created
+
+
+# Sorts the list of transactions by date
+def get_chronological_transactions(transactions):
+    if len(transactions) > 0:
+        for i in range(0, len(transactions)):
+            earliestTransaction = transactions[i]
+            for j in range(i+1, len(transactions)):
+                if earliestTransaction["date"] > transactions[j]["date"]:
+                    earliestTransaction = transactions[j]
+            transactions[i] = earliestTransaction
+    return transactions
 
 
 class BalanceData(QObject):
@@ -51,7 +63,7 @@ class BalanceData(QObject):
     def __init__(self):
         super().__init__()
 
-        create_file_if_absent(self, self.csv_file_path)
+        create_file_if_absent(self.csv_file_path)
 
     @pyqtSlot()
     def receiveBalanceData(self):
@@ -138,7 +150,7 @@ class sendTransHistory(QObject):
     def __init__(self):
         super().__init__()
 
-        create_file_if_absent(self, self.csv_file_path)
+        create_file_if_absent(self.csv_file_path)
 
     @pyqtSlot()
     def receiveTransHistory(self):
@@ -212,7 +224,7 @@ class receiveTransaction(QObject):
     def __init__(self):
         super().__init__()
 
-        create_file_if_absent(self, self.csv_file_path)
+        create_file_if_absent(self.csv_file_path)
 
     @pyqtSlot(str)
     def receiveTransactionData(self, data):
@@ -249,7 +261,7 @@ class updateGraph(QObject):
 
     def __init__(self):
         super().__init__()
-        create_file_if_absent(self, self.csv_file_path)
+        create_file_if_absent(self.csv_file_path)
 
     @pyqtSlot(str)
     def updateGraph(self, date):
@@ -261,6 +273,21 @@ class updateGraph(QObject):
         # Insert functions that will update all the graphs
         graphs = GraphGenerator()
 
+        income_transactions = []
+        expense_transactions = []
+
+        try:
+            with open(self.csv_file_path, mode='r') as file:
+                reader = csv.DictReader(file)
+                for row in reader:
+                    if row["type"] == "income":
+                        income_transactions.append(row)
+                    elif row["type"] == "expense":
+                        expense_transactions.append(row)
+        except Exception as e:
+            print(f"Error reading the file {self.csv_file_path}: {e}")
+            self.updateGraphSignal.emit(False)
+
         # Initialize accumulators
         total_income = 0.0
         total_expense = 0.0
@@ -268,23 +295,31 @@ class updateGraph(QObject):
         income_categories = defaultdict(float)
         expense_categories = defaultdict(float)
 
-        try:
-            with open(self.csv_file_path, mode='r') as file:
-                reader = csv.DictReader(file)
-                for row in reader:
-                    amount = float(row["amount"])
-                    category = row["category"]
-                    if row["type"] == "Income":
-                        total_income += amount
-                        income_categories[category] += amount
-                    elif row["type"] == "Expense":
-                        total_expense += amount
-                        expense_categories[category] += amount
+        income_transactions = get_chronological_transactions(income_transactions)
+        expense_transactions = get_chronological_transactions(expense_transactions)
 
-            # Emit the transaction history as a JSON string
-        except Exception as e:
-            print(f"Error reading the file {self.csv_file_path}: {e}")
-            self.updateGraphSignal.emit(False)
+        now = datetime.now()
+
+        for transaction in income_transactions:
+            transactionDate = datetime.strptime(row["date"], "%Y-%m-%dT%H:%M:%S%z")
+
+            if (date == "week" and now.isocalendar()[1] == transactionDate.isocalendar()[1]) or (date == "month" and now.month == transactionDate.month and now.year == transactionDate.year) or (date == "year" and now.year == transactionDate.year) or (date == "alltime"):
+                category = transaction["category"]
+                amount = float(transaction["amount"])
+
+                total_income += amount
+                income_categories[category] += amount
+
+        for transaction in expense_transactions:
+            transactionDate = datetime.strptime(row["date"], "%Y-%m-%dT%H:%M:%S%z")
+
+            if (date == "week" and now.isocalendar()[1] == transactionDate.isocalendar()[1]) or (date == "month" and now.month == transactionDate.month and now.year == transactionDate.year) or (date == "year" and now.year == transactionDate.year) or (date == "alltime"):
+                category = transaction["category"]
+                amount = float(transaction["amount"])
+
+                total_expense += amount
+                expense_categories[category] += amount
+
 
         graphs.incvexpGraph(total_income, total_expense) # Make sure function that pulls balance data happens here
 
@@ -298,9 +333,12 @@ class updateGraph(QObject):
 
 class editTransaction(QObject):
     editTransactionSignal = pyqtSignal(bool)
+    csv_file_path = os.path.join(get_appdata_folder(), "transactionData.csv")
+
 
     def __init__(self):
         super().__init__()
+        create_file_if_absent(self.csv_file_path)
 
     @pyqtSlot(str)
     def updateTransaction(self, old_data, new_data):
@@ -310,15 +348,47 @@ class editTransaction(QObject):
 
             idk how you want to find it but I gave you the info
         '''
+        beforeData = []
+        afterData = []
+        rowIsFound = False
+        try:
+            with open(self.csv_file_path, mode='r') as file:
+                reader = csv.DictReader(file)
+                for row in reader:
+                    if row == old_data:
+                        rowIsFound = True
+                    elif rowIsFound:
+                        afterData += row
+                    else:
+                        previousData += row    
+        except Exception as e:
+            print(f"Error reading the file {self.csv_file_path}: {e}")
+            self.editTransactionSignal.emit(False)
+
+        try:
+            with open(self.csv_file_path, mode='w', newline='') as file:
+                writer = csv.DictWriter(file)
+                for row in beforeData:
+                    writer.writerow(row)
+                writer.writerow(new_data)
+                for row in afterData:
+                    writer.writerow(row)
+        except Exception as e:
+            print(f"Error writing the file {self.csv_file_path}: {e}")
+            self.editTransactionSignal.emit(False)
 
         self.editTransactionSignal.emit(True)
 
 
 class deleteTransaction(QObject):
     deleteTransactionSignal = pyqtSignal(bool)
+    csv_file_path = os.path.join(get_appdata_folder(), "transactionData.csv")
+
 
     def __init__(self):
         super().__init__()
+        create_file_if_absent(self.csv_file_path)
+
 
     @pyqtSlot(str)
     def deleteTransaction(self, data):
@@ -328,5 +398,32 @@ class deleteTransaction(QObject):
 
             idk how you want to find it but I gave you the info
         '''
+        beforeData = []
+        afterData = []
+        rowIsFound = False
+        try:
+            with open(self.csv_file_path, mode='r') as file:
+                reader = csv.DictReader(file)
+                for row in reader:
+                    if row == data:
+                        rowIsFound = True
+                    elif rowIsFound:
+                        afterData += row
+                    else:
+                        previousData += row    
+        except Exception as e:
+            print(f"Error reading the file {self.csv_file_path}: {e}")
+            self.deleteTransactionSignal.emit(False)
+
+        try:
+            with open(self.csv_file_path, mode='w', newline='') as file:
+                writer = csv.DictWriter(file)
+                for row in beforeData:
+                    writer.writerow(row)
+                for row in afterData:
+                    writer.writerow(row)
+        except Exception as e:
+            print(f"Error writing the file {self.csv_file_path}: {e}")
+            self.deleteTransactionSignal.emit(False)
 
         self.deleteTransactionSignal.emit(True)
