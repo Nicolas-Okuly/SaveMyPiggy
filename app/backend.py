@@ -5,8 +5,10 @@ import os
 import platform
 import csv
 import json
+import pytz
+
 from collections import defaultdict
-from datetime import datetime
+from datetime import datetime, timedelta
 
 # For testing back to front communications
 class BackendTest(QObject):
@@ -56,6 +58,24 @@ def get_chronological_transactions(transactions):
     return transactions
 
 
+def get_transaction_data(transactions, date, categories):
+    total = 0
+    now = datetime.now().replace(tzinfo=pytz.utc)
+
+    for transaction in transactions:
+            transactionDate = datetime.strptime(transaction["date"], "%Y-%m-%dT%H:%M:%S%z")
+
+            if (date == "week" and now - timedelta(days = 7) <= transactionDate) or (date == "month" and now - timedelta(days = 30) <= transactionDate) or (date == "year" and now - timedelta(days = 365) <= transactionDate) or (date == "alltime"):
+
+                category = transaction["category"]
+                amount = float(transaction["amount"])
+
+                total += amount
+                categories[category] += amount
+
+    return total
+
+
 class BalanceData(QObject):
     sendBalanceData = pyqtSignal(str)
     csv_file_path = os.path.join(get_appdata_folder(), "transactionData.csv")
@@ -65,39 +85,39 @@ class BalanceData(QObject):
 
         create_file_if_absent(self.csv_file_path)
 
-    @pyqtSlot()
-    def receiveBalanceData(self):
+    @pyqtSlot(str)
+    def receiveBalanceData(self, date):
         print("Balance data was requested.")
 
         # Insert function to retrieve balance data
 
         # Initialize accumulators
+        total_balance = 0
         total_income = 0
         total_expense = 0
+        income_transactions = []
+        expense_transactions = []
         income_categories = defaultdict(float)
         expense_categories = defaultdict(float)
-
-        # Check if the file exists before reading
-        if not os.path.exists(self.csv_file_path):
-            print(f"Error: The file {self.csv_file_path} is missing.")
-            return
 
         # Read data from the CSV file
         try:
             with open(self.csv_file_path, mode='r') as file:
                 reader = csv.DictReader(file)
                 for row in reader:
-                    amount = float(row['amount'])
-                    category = row['category']
                     if row['type'] == 'income':
-                        total_income += amount
-                        income_categories[category] += amount
+                        income_transactions.append(row)
                     elif row['type'] == 'expense':
-                        total_expense += amount
-                        expense_categories[category] += amount
+                        expense_transactions.append(row)
+                total_balance = float(reader[-1]["after"])
+
         except Exception as e:
             print(f"Error reading the file {self.csv_file_path}: {e}")
             return
+        
+
+        total_income = get_transaction_data(income_transactions, date, income_categories)
+        total_expense = get_transaction_data(expense_transactions, date, expense_categories)
 
         # Calculate percentages for categories
         income_category_data = [
@@ -109,9 +129,6 @@ class BalanceData(QObject):
             for name, value in expense_categories.items()
         ]
 
-        # Calculate total balance
-        total_balance = total_income - total_expense
-
         # Format the data
         balance_data = {
             "balance": total_balance,
@@ -122,7 +139,7 @@ class BalanceData(QObject):
         }
 
         # Emit the balance data as a JSON string
-        self.sendBalanceData.emit(json.dumps(balance_data)) 
+        self.sendBalanceData.emit(f"{balance_data}") 
 
         # # Formatted as suggested below
         # # Income and expense categories should be the same as the graphs
@@ -289,8 +306,8 @@ class updateGraph(QObject):
             self.updateGraphSignal.emit(False)
 
         # Initialize accumulators
-        total_income = 0.0
-        total_expense = 0.0
+        # total_income = 0.0
+        # total_expense = 0.0
 
         income_categories = defaultdict(float)
         expense_categories = defaultdict(float)
@@ -298,27 +315,31 @@ class updateGraph(QObject):
         income_transactions = get_chronological_transactions(income_transactions)
         expense_transactions = get_chronological_transactions(expense_transactions)
 
-        now = datetime.now()
+        total_income = get_transaction_data(income_transactions, date, income_categories)
+        total_expense = get_transaction_data(expense_transactions, date, expense_categories)
 
-        for transaction in income_transactions:
-            transactionDate = datetime.strptime(row["date"], "%Y-%m-%dT%H:%M:%S%z")
+        # now = datetime.now().replace(tzinfo=pytz.utc)
 
-            if (date == "week" and now.isocalendar()[1] == transactionDate.isocalendar()[1]) or (date == "month" and now.month == transactionDate.month and now.year == transactionDate.year) or (date == "year" and now.year == transactionDate.year) or (date == "alltime"):
-                category = transaction["category"]
-                amount = float(transaction["amount"])
+        # for transaction in income_transactions:
+        #     transactionDate = datetime.strptime(transaction["date"], "%Y-%m-%dT%H:%M:%S%z")
 
-                total_income += amount
-                income_categories[category] += amount
+        #     if (date == "week" and now - timedelta(days = 7) <= transactionDate) or (date == "month" and now - timedelta(days = 30) <= transactionDate) or (date == "year" and now - timedelta(days = 365) <= transactionDate) or (date == "alltime"):
 
-        for transaction in expense_transactions:
-            transactionDate = datetime.strptime(row["date"], "%Y-%m-%dT%H:%M:%S%z")
+        #         category = transaction["category"]
+        #         amount = float(transaction["amount"])
 
-            if (date == "week" and now.isocalendar()[1] == transactionDate.isocalendar()[1]) or (date == "month" and now.month == transactionDate.month and now.year == transactionDate.year) or (date == "year" and now.year == transactionDate.year) or (date == "alltime"):
-                category = transaction["category"]
-                amount = float(transaction["amount"])
+        #         total_income += amount
+        #         income_categories[category] += amount
 
-                total_expense += amount
-                expense_categories[category] += amount
+        # for transaction in expense_transactions:
+        #     transactionDate = datetime.strptime(transaction["date"], "%Y-%m-%dT%H:%M:%S%z")
+
+        #     if (date == "week" and now - timedelta(days = 7) <= transactionDate) or (date == "month" and now - timedelta(days = 30) <= transactionDate) or (date == "year" and now - timedelta(days = 365) <= transactionDate) or (date == "alltime"):
+        #         category = transaction["category"]
+        #         amount = float(transaction["amount"])
+
+        #         total_expense += amount
+        #         expense_categories[category] += amount
 
 
         graphs.incvexpGraph(total_income, total_expense) # Make sure function that pulls balance data happens here
@@ -331,6 +352,7 @@ class updateGraph(QObject):
         self.updateGraphSignal.emit(True)
 
 
+# For editing a transaction from the list of transactions
 class editTransaction(QObject):
     editTransactionSignal = pyqtSignal(bool)
     csv_file_path = os.path.join(get_appdata_folder(), "transactionData.csv")
@@ -380,6 +402,7 @@ class editTransaction(QObject):
         self.editTransactionSignal.emit(True)
 
 
+# For deleting a specific transaction from the list of transactions
 class deleteTransaction(QObject):
     deleteTransactionSignal = pyqtSignal(bool)
     csv_file_path = os.path.join(get_appdata_folder(), "transactionData.csv")
