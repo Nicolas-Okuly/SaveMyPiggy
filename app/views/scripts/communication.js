@@ -3,6 +3,7 @@ let sendBalance;
 let sendTrans;
 let updateGraphs;
 let receiveTransaction;
+var globalData;
 
 // Create the web channel
 new QWebChannel(qt.webChannelTransport, function (channel) {
@@ -34,7 +35,7 @@ new QWebChannel(qt.webChannelTransport, function (channel) {
         handleTransData(JSON.parse(message));
     });
 
-    sendBalance.receiveBalanceData()
+    sendBalance.receiveBalanceData("alltime");
     sendTrans.receiveTransHistory();
     updateGraphs.updateGraph("alltime");
 
@@ -114,8 +115,10 @@ async function handleTransData(data) {
         newRow.insertCell(3).innerHTML = date;
         newRow.insertCell(4).innerHTML = item.category;
         newRow.insertCell(5).innerHTML = item.type;
-        newRow.insertCell(6).innerHTML = `<button id="del-${dateObj.getTime()}"><img width="25px" src="./icons/trash.svg" title="delete" alt="delete"></button><button id="edit-${dateObj.getTime()}"><img width="25px" src="./icons/edit.svg" title="edit" alt="edit"></button>`
+        newRow.insertCell(6).innerHTML = `<button id="del-${dateObj.getTime()}"><img width="25px" src="./icons/trash.svg" title="delete" alt="delete"></button><button id="edit-${dateObj.getTime()}"><img width="25px" src="./icons/edit.svg" title="edit" alt="edit"></button>`;
     });
+
+    globalData = data;
 
     const select_menu = document.getElementById("trans-select");
     categories.forEach(category => {

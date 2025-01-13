@@ -88,6 +88,7 @@ class BalanceData(QObject):
     @pyqtSlot(str)
     def receiveBalanceData(self, date):
         print("Balance data was requested.")
+        print(date)
 
         # Insert function to retrieve balance data
 
@@ -104,12 +105,14 @@ class BalanceData(QObject):
         try:
             with open(self.csv_file_path, mode='r') as file:
                 reader = csv.DictReader(file)
+                last_row = ""
                 for row in reader:
                     if row['type'] == 'income':
                         income_transactions.append(row)
                     elif row['type'] == 'expense':
                         expense_transactions.append(row)
-                total_balance = float(reader[-1]["after"])
+                    last_row = row
+                total_balance = float(last_row["after"])
 
         except Exception as e:
             print(f"Error reading the file {self.csv_file_path}: {e}")
@@ -139,7 +142,7 @@ class BalanceData(QObject):
         }
 
         # Emit the balance data as a JSON string
-        self.sendBalanceData.emit(f"{balance_data}") 
+        self.sendBalanceData.emit(f"{json.dumps(balance_data)}") 
 
         # # Formatted as suggested below
         # # Income and expense categories should be the same as the graphs

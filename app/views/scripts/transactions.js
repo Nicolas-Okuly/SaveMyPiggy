@@ -57,5 +57,6 @@ document.getElementById("trans-search").addEventListener("keyup", function (even
  * @param {HTMLButtonElement} button 
  */
 function transactionButtonClick(button) {
+    let transaction = button.id;
     
 }
