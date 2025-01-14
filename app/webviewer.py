@@ -49,6 +49,7 @@ class WebApp(QMainWindow):
         self.sendTrans = sendTransHistory()
         self.updateGraphs = updateGraph()
         self.receiveTransaction = receiveTransaction()
+        self.deleteTransaction = deleteTransaction()
 
         # Register the objects for use in the backend
         self.channel.registerObject("testBackend", self.testBackend)
@@ -56,6 +57,7 @@ class WebApp(QMainWindow):
         self.channel.registerObject("sendTrans", self.sendTrans)
         self.channel.registerObject("updateGraphs", self.updateGraphs)
         self.channel.registerObject("receiveTransaction", self.receiveTransaction)
+        self.channel.registerObject("deleteTransaction", self.deleteTransaction)
 
         # Set the channel to the page
         webview.page().setWebChannel(self.channel)

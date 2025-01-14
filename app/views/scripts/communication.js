@@ -3,6 +3,7 @@ let sendBalance;
 let sendTrans;
 let updateGraphs;
 let receiveTransaction;
+let deleteTransaction;
 var globalData;
 
 // Create the web channel
@@ -14,6 +15,7 @@ new QWebChannel(qt.webChannelTransport, function (channel) {
     sendTrans = channel.objects.sendTrans;
     updateGraphs = channel.objects.updateGraphs;
     receiveTransaction = channel.objects.receiveTransaction;
+    deleteTransaction = channel.objects.deleteTransaction;
 
     sendBalance.sendBalanceData.connect(function (message) {
         // Format the message to JSON and send it to the handler function.
@@ -30,9 +32,15 @@ new QWebChannel(qt.webChannelTransport, function (channel) {
         });
     });
 
-    sendTrans.sendTransHistory.connect(function (message) {
+    sendTrans.sendTransHistory.connect(async function (message) {
         // Format the message to JSON and send it to the handler function.
         handleTransData(JSON.parse(message));
+
+        await document.querySelectorAll("button").forEach(async (button) => {
+            await button.addEventListener("click", async (event) => {
+                transactionButtonClick(button, deleteTransaction); // Declared in transactions.js
+            });
+        });
     });
 
     sendBalance.receiveBalanceData("alltime");
@@ -109,6 +117,11 @@ async function handleTransData(data) {
 
         if (!categories.includes(item.category)) categories.push(item.category);
 
+        document.getElementById("mrt-name").innerHTML = item.name;
+        document.getElementById("mrt-amt").innerHTML = item.cost;
+        document.getElementById("mrt-date").innerHTML = date;
+        document.getElementById("mrt-cat").innerHTML = item.category;
+
         newRow.insertCell(0).innerHTML = item.name;
         newRow.insertCell(1).innerHTML = `<span class="money ${item.cost < 0 ? 'red':''}">$${item.cost}</span>`;
         newRow.insertCell(2).innerHTML = `<span class="money ${item.after < 0 ? 'red':''}">$${item.after}</span>`;
@@ -116,6 +129,7 @@ async function handleTransData(data) {
         newRow.insertCell(4).innerHTML = item.category;
         newRow.insertCell(5).innerHTML = item.type;
         newRow.insertCell(6).innerHTML = `<button id="del-${dateObj.getTime()}"><img width="25px" src="./icons/trash.svg" title="delete" alt="delete"></button><button id="edit-${dateObj.getTime()}"><img width="25px" src="./icons/edit.svg" title="edit" alt="edit"></button>`;
+        newRow.id = dateObj.getTime();
     });
 
     globalData = data;
@@ -124,15 +138,10 @@ async function handleTransData(data) {
     categories.forEach(category => {
         select_menu.innerHTML += `<option value="${category.toLowerCase()}">${category}</option>`
     });
+
     const transForm = document.getElementById("trans-category");
     categories.forEach(category => {
         transForm.innerHTML += `<option value="${category.toLowerCase()}">${category}</option>`
-    });
-
-    await document.querySelectorAll("button").forEach(async (button) => {
-        await button.addEventListener("click", async (event) => {
-            transactionButtonClick(button); // Declared in transactions.js
-        });
     });
 }
 
@@ -156,6 +165,6 @@ async function processFormInput(form) {
         transactionAmount,
         transactionCategory,
         transactionType,
-        new Date(transactionDate)        
+        new Date(transactionDate)
     ]
 }

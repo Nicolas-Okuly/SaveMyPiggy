@@ -21,6 +21,7 @@ files = [
     ("app/views/scripts/communication.js", "views/scripts"),
     ("app/views/scripts/qwebchannel.js", "views/scripts"),
     ("app/views/scripts/transactions.js", "views/scripts"),
+    ("app/views/scripts/modal.js", "views/scripts"),
 
     # app/views/graphs
     ("app/views/graphs/expense-pie.svg", "views/graphs"),
@@ -43,7 +44,8 @@ PyInstaller.__main__.run([
     "app.py",
    "--onefile",
     "--noconsole",
-    "--icon=./icon.ico",
+    "--windowed",
+    "--icon=icon.ico",
     "--hidden-import=matplotlib.backends.backend_svg",
     *[f"--add-data={src}:{dest}" for src, dest in files]
 ])

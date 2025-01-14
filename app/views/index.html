@@ -11,12 +11,15 @@
 
         <script src="./scripts/transactions.js" defer></script>
         <script src="./scripts/communication.js" defer></script>
+        <script src="./scripts/modal.js" defer></script>
         <script src="./scripts/blur.js"></script>
 
     </head>
     <body>
         <!-- Button to blur sensitive data -->
-        <button id="blur" title="Hide sensitive information" onclick="blurAll()"><img id="blurBtn" width="50px" src="./icons/eye-slash.svg" alt="Toggle visibility"></button>
+        <button id="blur" title="Hide sensitive information" onclick="blurAll()">
+            <img id="blurBtn" width="50px" src="./icons/eye-slash.svg" alt="Toggle visibility">
+        </button>
 
         <!-- Navigation -->
         <nav>
@@ -47,7 +50,7 @@
                     <div>
                         <h3>Most Recent Transaction</h3>
                         <h4 id="mrt-name"></h4>
-                        <p><span id="mrt-amt" class="money"></span></p>
+                        <p>$<span id="mrt-amt" class="money"></span></p>
                         <p>Date: <span id="mrt-date"></span></p>
                         <p>Category: <span id="mrt-cat"></span></p>
                     </div>
@@ -55,7 +58,7 @@
                     <div>
                         <h3>Add a transaction</h3>
                         <p>Click the button below to add a transaction and recalculate your spending data.</p>
-                        <button>Add transaction</button>
+                        <button id="modal-open">Add transaction</button>
                     </div>
 
                     <div>
@@ -69,22 +72,30 @@
             <!-- Add a transaction modal -->
             <div class="transaction-modal">
                 <form id="transaction-form">
+                    <span class="close">&times;</span>
+
+                    <h3>Add A Transaction</h3>
                     <p class="red">* Indicates required values.</p>
+                    <br>
                     
                     <label for="trans-name" class="required">Transaction Name:</label>
-                    <input name="name" id="trans-name" type="text" required>
+                    <input name="name" id="trans-name" type="text" placeholder="Safeway" required>
+                    <br>
 
                     <label for="trans-amt" class="required">Transaction Amount:</label>
-                    <input name="amount" type="number" id="trans-amt" required>
+                    <input name="amount" type="number" step="0.01" id="trans-amt" placeholder="$59.87" required>
+                    <br>
 
                     <label for="trans-date" class="required">Transaction Date:</label>
-                    <input name="date" type="date" id="trans-date" required>
+                    <input name="date" type="datetime-local" id="trans-date" required>
+                    <br>
 
                     <label for="trans-category" class="required">Transaction Category:</label>
                     <select name="category" id="trans-category" required>
                         <option value="" selected disabled>Select an option</option>
-                        <option value="createnew">Create new</option>
+                        <option value="createnew"><b>--Create New--</b></option>
                     </select>
+                    <br>
 
                     <script>
                         document.getElementById("trans-category").addEventListener("change", event => {
@@ -100,7 +111,7 @@
 
                     <div class="hidden" id="hidden-new-cat">
                         <label for="trans-new-category" class="required">New Category Name:</label>
-                        <input name="new-category" type="text" id="trans-new-category">
+                        <input name="new-category" type="text" id="trans-new-category" placeholder="Grocery Shopping">
                     </div>
 
                     <label for="trans-type" class="required">Transaction Type:</label>
@@ -108,6 +119,7 @@
                         <option value="income">Income</option>
                         <option value="expense">Expense</option>
                     </select>
+                    <br>
 
                     <button type="submit">Add transaction</button>
                 </form>
@@ -117,6 +129,7 @@
             <div class="graphs">
                 <!-- Income vs Expense graph and data -->
                 <h2 id="bkmrk1">Income and Expenses Data</h2>
+
                 <select name="inc-exp-filt" id="income-filter">
                     <option value="alltime">All time</option>
                     <option value="week">Last week</option>
@@ -164,11 +177,13 @@
                 <h2 id="bkmrk2">Transcation History</h2>
 
                 <!-- Search Parameters -->
-                <input type="text" id="trans-search" placeholder="Search for transactions">
-
-                <select name="trans-select" id="trans-select">
-                    <option value="sao">Select an option</option>
-                </select>
+                <div class="trans-hist-search">
+                    <input type="text" id="trans-search" placeholder="Search for transactions">
+                    
+                    <select title="filter" name="trans-select" id="trans-select">
+                        <option value="sao">Select an option</option>
+                    </select>
+                </div>
 
                 <!-- Table of History -->
                 <table id="hist-table">

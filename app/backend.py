@@ -60,7 +60,7 @@ def get_chronological_transactions(transactions):
 
 def get_transaction_data(transactions, date, categories):
     total = 0
-    now = datetime.now().replace(tzinfo=pytz.utc)
+    now = datetime.now().replace(tzinfo=None)
 
     for transaction in transactions:
             transactionDate = datetime.strptime(transaction["date"], "%Y-%m-%dT%H:%M:%S.%fZ")
@@ -257,7 +257,6 @@ class receiveTransaction(QObject):
                 for row in reader:
                     last_row = row
 
-                print(last_row)
                 if(last_row == ""):
                     last_row = { "after": "0" }
 
@@ -267,19 +266,19 @@ class receiveTransaction(QObject):
                     after = float(last_balance) - float(data[1])
                 else:
                     after = float(last_balance) + float(data[1])
-
+                
                 transaction = {
                     "name": data[0],
                     "type": data[3],
-                    "category": data[2],
+                    "category": data[2].lower(),
                     "amount": data[1],                    
                     "date": data[4],
-                    "after": after,
+                    "after": round(after, 2)
                 }
         except Exception as e:
             print(f"Error reading the file {self.csv_file_path}: {e}")
 
-        with open(self.csv_file_path, mode='a', newline='') as file:
+        with open(self.csv_file_path, mode='a', newline='\n') as file:
             writer = csv.DictWriter(file, fieldnames=["name", "type", "category", "amount", "date", "after"])
             writer.writerow(transaction)
 
@@ -309,7 +308,7 @@ class updateGraph(QObject):
         expense_transactions = []
 
         try:
-            with open(self.csv_file_path, mode='r') as file:
+            with open(self.csv_file_path, mode='r', newline='\n') as file:
                 reader = csv.DictReader(file)
                 for row in reader:
                     if row["type"] == "income":
@@ -430,6 +429,7 @@ class deleteTransaction(QObject):
 
     @pyqtSlot(str)
     def deleteTransaction(self, data):
+        data = str(data).replace('[', '').replace(']', '').replace('"', '').split(',')
         '''
             data will look roughly like this:
             [ "Transaction Name", "Transaction Amount", "Transaction Category", "Transaction Type", "Transaction Date" ]
@@ -438,10 +438,11 @@ class deleteTransaction(QObject):
         '''
         beforeData = []
         afterData = []
+        previousData = []
         rowIsFound = False
         try:
             with open(self.csv_file_path, mode='r') as file:
-                reader = csv.DictReader(file)
+                reader = csv.DictReader(file, fieldnames=["name", "type", "category", "amount", "date", "after"])
                 for row in reader:
                     if row == data:
                         rowIsFound = True
@@ -455,7 +456,7 @@ class deleteTransaction(QObject):
 
         try:
             with open(self.csv_file_path, mode='w', newline='') as file:
-                writer = csv.DictWriter(file)
+                writer = csv.DictWriter(file, fieldnames=["name", "type", "category", "amount", "date", "after"])
                 for row in beforeData:
                     writer.writerow(row)
                 for row in afterData:
