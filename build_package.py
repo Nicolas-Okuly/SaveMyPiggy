@@ -32,7 +32,10 @@ files = [
     ("app/views/icons/eye-slash.svg", "views/icons"),
     ("app/views/icons/eye.svg", "views/icons"),
     ("app/views/icons/piggybank.svg", "views/icons"),
-    ("app/views/icons/trash.svg", "views/icons")
+    ("app/views/icons/trash.svg", "views/icons"),
+
+    # Root
+    ("icon.ico", "./")
 ]
 
 # Create the exe
@@ -40,7 +43,7 @@ PyInstaller.__main__.run([
     "app.py",
    "--onefile",
     "--noconsole",
-    "--icon=icon.ico",
+    "--icon=./icon.ico",
     "--hidden-import=matplotlib.backends.backend_svg",
     *[f"--add-data={src}:{dest}" for src, dest in files]
 ])

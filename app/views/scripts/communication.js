@@ -43,10 +43,10 @@ new QWebChannel(qt.webChannelTransport, function (channel) {
         updateGraphs.updateGraph(change.target.value);
     });
 
-    document.getElementById("transaction-form").addEventListener("submit", (event) => {
+    document.getElementById("transaction-form").addEventListener("submit", async (event) => {
         let element = event.target;
-        let data = processFormInput(element);
-        receiveTransaction.receiveTransactionData(data);
+        let data = await processFormInput(element);
+        receiveTransaction.receiveTransactionData(JSON.stringify(data));
     })
 });
 
@@ -124,6 +124,10 @@ async function handleTransData(data) {
     categories.forEach(category => {
         select_menu.innerHTML += `<option value="${category.toLowerCase()}">${category}</option>`
     });
+    const transForm = document.getElementById("trans-category");
+    categories.forEach(category => {
+        transForm.innerHTML += `<option value="${category.toLowerCase()}">${category}</option>`
+    });
 
     await document.querySelectorAll("button").forEach(async (button) => {
         await button.addEventListener("click", async (event) => {
@@ -147,11 +151,11 @@ async function processFormInput(form) {
 
     let transactionType = form["type"].value;
 
-    return {
-        name: transactionName,
-        amount: transactionAmount,
-        date: transactionDate,
-        category: transactionCategory,
-        type: transactionType
-    }
+    return [
+        transactionName,
+        transactionAmount,
+        transactionCategory,
+        transactionType,
+        new Date(transactionDate)        
+    ]
 }

@@ -82,6 +82,22 @@ nav a:hover {
     }
 }
 
+.quick-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+}
+
+.quick-row > * {
+    width: 30%;
+    margin: 10px;
+    padding: 7px;
+    background-color: var(--element-background);
+    border-radius: 12px;
+}
+
 /* Style the header at the top of the page */
 header {
     background-color: var(--element-background);
@@ -104,6 +120,8 @@ header img {
     header {
         text-align: left;
     }
+    .quick-row { flex-direction: column; }
+    .quick-row > * { width: 90%; margin: 10px auto; }
 }
 
 /* Button to blur sensetive data in the bottom right corner */
@@ -176,6 +194,7 @@ header img {
 #hist-table {
     border-collapse: collapse;
     border: 1px solid black;
+    margin: 15px auto;
 }
 #hist-table td, #hist-table th {
     text-transform: capitalize;

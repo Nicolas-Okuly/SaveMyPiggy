@@ -2,6 +2,7 @@
 # Imports
 from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout
 from PyQt5.QtCore import QUrl
+from PyQt5.QtGui import QIcon
 from PyQt5.QtWebEngineWidgets import QWebEngineView, QWebEngineSettings
 from PyQt5.QtWebChannel import QWebChannel
 from .backend import *
@@ -25,6 +26,7 @@ class WebApp(QMainWindow):
         super().__init__()
         self.setWindowTitle("Finance Tracker")
         self.setGeometry(100, 100, 800, 600)
+        self.setWindowIcon(QIcon("icon.ico"))
 
         # Initialize the webview and load the html files
         webview = QWebEngineView()

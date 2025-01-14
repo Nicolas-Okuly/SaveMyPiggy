@@ -63,7 +63,7 @@ def get_transaction_data(transactions, date, categories):
     now = datetime.now().replace(tzinfo=pytz.utc)
 
     for transaction in transactions:
-            transactionDate = datetime.strptime(transaction["date"], "%Y-%m-%dT%H:%M:%S%z")
+            transactionDate = datetime.strptime(transaction["date"], "%Y-%m-%dT%H:%M:%S.%fZ")
 
             if (date == "week" and now - timedelta(days = 7) <= transactionDate) or (date == "month" and now - timedelta(days = 30) <= transactionDate) or (date == "year" and now - timedelta(days = 365) <= transactionDate) or (date == "alltime"):
 
@@ -88,7 +88,6 @@ class BalanceData(QObject):
     @pyqtSlot(str)
     def receiveBalanceData(self, date):
         print("Balance data was requested.")
-        print(date)
 
         # Insert function to retrieve balance data
 
@@ -117,7 +116,6 @@ class BalanceData(QObject):
         except Exception as e:
             print(f"Error reading the file {self.csv_file_path}: {e}")
             return
-        
 
         total_income = get_transaction_data(income_transactions, date, income_categories)
         total_expense = get_transaction_data(expense_transactions, date, expense_categories)
@@ -142,8 +140,7 @@ class BalanceData(QObject):
         }
 
         # Emit the balance data as a JSON string
-        self.sendBalanceData.emit(f"{json.dumps(balance_data)}") 
-
+        self.sendBalanceData.emit(f"{json.dumps(balance_data)}")
         # # Formatted as suggested below
         # # Income and expense categories should be the same as the graphs
         # exampleBalance = {
@@ -193,7 +190,7 @@ class sendTransHistory(QObject):
                 for row in reader:
                     try:
                         cost = float(row["amount"])
-                        date = datetime.strptime(row["date"], "%Y-%m-%dT%H:%M:%S%z").isoformat()
+                        date = datetime.strptime(row["date"], "%Y-%m-%dT%H:%M:%S.%fZ").isoformat()
 
                         # Calculate running balance
                         running_balance += cost
@@ -248,6 +245,7 @@ class receiveTransaction(QObject):
 
     @pyqtSlot(str)
     def receiveTransactionData(self, data):
+        data = str(data).replace('[', '').replace(']', '').replace('"', '').split(',')
         print(f'Got {str(data)}')
 
         # Add a transaction to the users transactions
@@ -255,20 +253,34 @@ class receiveTransaction(QObject):
         try:
             with open(self.csv_file_path, mode='r') as file:
                 reader = csv.DictReader(file)
-                last_balance = reader[-1]["after"]
+                last_row = ""
+                for row in reader:
+                    last_row = row
+
+                print(last_row)
+                if(last_row == ""):
+                    last_row = { "after": "0" }
+
+                last_balance = float(last_row["after"])
+
+                if (data[3] == "expense"):
+                    after = float(last_balance) - float(data[1])
+                else:
+                    after = float(last_balance) + float(data[1])
+
                 transaction = {
                     "name": data[0],
-                    "amount": data[1],
-                    "category": data[2],
                     "type": data[3],
+                    "category": data[2],
+                    "amount": data[1],                    
                     "date": data[4],
-                    "after": last_balance + data[1],
+                    "after": after,
                 }
         except Exception as e:
             print(f"Error reading the file {self.csv_file_path}: {e}")
 
         with open(self.csv_file_path, mode='a', newline='') as file:
-            writer = csv.DictWriter(file)
+            writer = csv.DictWriter(file, fieldnames=["name", "type", "category", "amount", "date", "after"])
             writer.writerow(transaction)
 
         self.receiveTransaction.emit(True)
