@@ -65,13 +65,14 @@ function transactionButtonClick(button, deleteTransaction) {
 
         if(transaction == dateObj.getTime()) {
             if (action == "del") {
-                // deleteTransaction.deleteTransaction(String([
-                //     item.name,
-                //     item.cost,
-                //     item.category,
-                //     item.type,
-                //     item.date
-                // ]));
+                deleteTransaction.deleteTransaction(String([
+                    item.name,
+                    item.cost,
+                    item.category,
+                    item.type,
+                    item.date,
+                    item.after
+                ]));
             } else {
                 const tableRow = document.getElementById(transaction);
 
