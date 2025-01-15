@@ -15,6 +15,8 @@ files = [
     # app/views
     ("app/views/index.html", "views"),
     ("app/views/styles.css", "views"),
+    ("app/views/help.css", "views"),
+    ("app/views/help.html", "views"),
 
     # app/views/scripts
     ("app/views/scripts/blur.js", "views/scripts"),
