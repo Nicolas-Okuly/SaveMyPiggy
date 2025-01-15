@@ -5,7 +5,6 @@ import os
 import platform
 import csv
 import json
-import pytz
 
 from collections import defaultdict
 from datetime import datetime, timedelta
@@ -93,8 +92,6 @@ class BalanceData(QObject):
 
         # Initialize accumulators
         total_balance = 0
-        total_income = 0
-        total_expense = 0
         income_transactions = []
         expense_transactions = []
         income_categories = defaultdict(float)
@@ -104,7 +101,7 @@ class BalanceData(QObject):
         try:
             with open(self.csv_file_path, mode='r') as file:
                 reader = csv.DictReader(file)
-                last_row = ""
+                last_row = defaultdict(float)
                 for row in reader:
                     if row['type'] == 'income':
                         income_transactions.append(row)
@@ -175,13 +172,7 @@ class sendTransHistory(QObject):
 
         # Insert function to send transaction history
 
-        if not os.path.exists(self.csv_file_path):
-            print(f"Error: The file {self.csv_file_path} is missing.")
-            self.sendTransHistory.emit("[]")
-            return
-
         transaction_history = []
-        running_balance = 0.0  # To calculate the 'after' balance dynamically
 
         # Read data from the CSV file
         try:
@@ -190,17 +181,9 @@ class sendTransHistory(QObject):
                 for row in reader:
                     try:
                         cost = float(row["amount"])
+                        after = float(row["after"])
+
                         date = datetime.strptime(row["date"], "%Y-%m-%dT%H:%M:%S.%fZ").isoformat()
-
-                        # Calculate running balance
-                        running_balance += cost
-
-                        # Use the existing 'after' value if valid, otherwise calculate dynamically
-                        # after_balance = float(row["after"]) if "after" in row and row["after"] else running_balance
-                        if (row["type"] == "expense"): after_balance = float(row["amount"]) - float(row["amount"])*2
-                        else: after_balance = row["amount"]
-
-                        # after_balance = float(row["after"]) if "after" in row and row["after"] else running_balance
 
                         transaction = {
                             "name": row["name"],
@@ -208,7 +191,7 @@ class sendTransHistory(QObject):
                             "category": row["category"],
                             "type": row["type"],
                             "date": date,
-                            "after": row["after"],
+                            "after": after,
                         }
 
                         transaction_history.append(transaction)
@@ -230,7 +213,6 @@ class sendTransHistory(QObject):
         #     { "name": "Gas", "cost": -56.78, "category": "Automobile", "type": "expense", "date": "2024-01-06T19:20:34-07:00", "after": 141.87 },
         #     { "name": "Taregt Refund", "cost": 198.65, "category": "Shopping", "type": "income", "date": "2024-06-06T09:12:23-07:00", "after": 198.65}
         # ]
-        # self.sendTransHistory.emit(f"{exampleHistory}")
 
 
 # For adding a new transaction
@@ -277,6 +259,7 @@ class receiveTransaction(QObject):
                 }
         except Exception as e:
             print(f"Error reading the file {self.csv_file_path}: {e}")
+            self.receiveTransaction.emit(False)
 
         with open(self.csv_file_path, mode='a', newline='\n') as file:
             writer = csv.DictWriter(file, fieldnames=["name", "type", "category", "amount", "date", "after"])
@@ -319,9 +302,6 @@ class updateGraph(QObject):
             print(f"Error reading the file {self.csv_file_path}: {e}")
             self.updateGraphSignal.emit(False)
 
-        # Initialize accumulators
-        # total_income = 0.0
-        # total_expense = 0.0
 
         income_categories = defaultdict(float)
         expense_categories = defaultdict(float)
@@ -331,29 +311,6 @@ class updateGraph(QObject):
 
         total_income = get_transaction_data(income_transactions, date, income_categories)
         total_expense = get_transaction_data(expense_transactions, date, expense_categories)
-
-        # now = datetime.now().replace(tzinfo=pytz.utc)
-
-        # for transaction in income_transactions:
-        #     transactionDate = datetime.strptime(transaction["date"], "%Y-%m-%dT%H:%M:%S%z")
-
-        #     if (date == "week" and now - timedelta(days = 7) <= transactionDate) or (date == "month" and now - timedelta(days = 30) <= transactionDate) or (date == "year" and now - timedelta(days = 365) <= transactionDate) or (date == "alltime"):
-
-        #         category = transaction["category"]
-        #         amount = float(transaction["amount"])
-
-        #         total_income += amount
-        #         income_categories[category] += amount
-
-        # for transaction in expense_transactions:
-        #     transactionDate = datetime.strptime(transaction["date"], "%Y-%m-%dT%H:%M:%S%z")
-
-        #     if (date == "week" and now - timedelta(days = 7) <= transactionDate) or (date == "month" and now - timedelta(days = 30) <= transactionDate) or (date == "year" and now - timedelta(days = 365) <= transactionDate) or (date == "alltime"):
-        #         category = transaction["category"]
-        #         amount = float(transaction["amount"])
-
-        #         total_expense += amount
-        #         expense_categories[category] += amount
 
 
         graphs.incvexpGraph(total_income, total_expense) # Make sure function that pulls balance data happens here
@@ -396,7 +353,7 @@ class editTransaction(QObject):
                     elif rowIsFound:
                         afterData += row
                     else:
-                        previousData += row    
+                        beforeData += row
         except Exception as e:
             print(f"Error reading the file {self.csv_file_path}: {e}")
             self.editTransactionSignal.emit(False)
@@ -436,31 +393,41 @@ class deleteTransaction(QObject):
 
             idk how you want to find it but I gave you the info
         '''
-        beforeData = []
-        afterData = []
-        previousData = []
-        rowIsFound = False
+        data = {
+            "name": data[0],
+            "type": data[3],
+            "category": data[2],
+            "amount": data[1],
+            "date": data[4],
+            "after": data[5],
+        }
+
+        newData = []
+
         try:
             with open(self.csv_file_path, mode='r') as file:
                 reader = csv.DictReader(file, fieldnames=["name", "type", "category", "amount", "date", "after"])
                 for row in reader:
-                    if row == data:
-                        rowIsFound = True
-                    elif rowIsFound:
-                        afterData += row
-                    else:
-                        previousData += row    
+                    tempDate = row["date"]
+                    row["date"] = row["date"][:-5]
+                    if row != data:
+                        row["date"] = tempDate
+                        newData.append(row)
         except Exception as e:
             print(f"Error reading the file {self.csv_file_path}: {e}")
             self.deleteTransactionSignal.emit(False)
 
+        print(data)
+        print(newData)
+
         try:
             with open(self.csv_file_path, mode='w', newline='') as file:
                 writer = csv.DictWriter(file, fieldnames=["name", "type", "category", "amount", "date", "after"])
-                for row in beforeData:
+                # writer.writeheader()
+                for row in newData:
                     writer.writerow(row)
-                for row in afterData:
-                    writer.writerow(row)
+                print("Transaction removed")
+
         except Exception as e:
             print(f"Error writing the file {self.csv_file_path}: {e}")
             self.deleteTransactionSignal.emit(False)
