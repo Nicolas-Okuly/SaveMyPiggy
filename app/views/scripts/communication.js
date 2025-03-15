@@ -55,7 +55,7 @@ new QWebChannel(qt.webChannelTransport, function (channel) {
         let element = event.target;
         let data = await processFormInput(element);
         receiveTransaction.receiveTransactionData(JSON.stringify(data));
-    })
+    });
 });
 
 // Handles all balance data

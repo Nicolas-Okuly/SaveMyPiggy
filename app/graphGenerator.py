@@ -19,7 +19,7 @@ rcParams["font.size"] = 16
 class GraphGenerator():
     def incvexpGraph(self, income: float, expense: float):
         '''
-            Create and style the income vs outcome bargraph
+            Create and style the income vs outcome bar graph
             then save it to app/views/graphs as incomevexpense.svg
         '''
         plt.figure(figsize=(6, 3))

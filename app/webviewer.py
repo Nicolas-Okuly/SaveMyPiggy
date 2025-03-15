@@ -1,5 +1,6 @@
 # app/webviewer.py
 # Imports
+
 from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout
 from PyQt5.QtCore import QUrl
 from PyQt5.QtGui import QIcon

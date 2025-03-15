@@ -17,7 +17,7 @@ function blurAll() {
         toggle = true;
         document.getElementById("blurBtn").src = "./icons/eye.svg";
     } else {
-        /* Unblur and restore colors */
+        /* Un-blur and restore colors */
         let moneyItems = document.getElementsByClassName("money");
 
         for (let i = 0; i < moneyItems.length; i++) {
