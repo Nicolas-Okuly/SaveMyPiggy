@@ -8,9 +8,17 @@ import os
 files = [
     # app directory
     ("app/__init__.py", "app"),
-    ("app/backend.py", "app"),
     ("app/graphGenerator.py", "app"),
     ("app/webviewer.py", "app"),
+
+    # backend
+    ("app/backend/backend.py", "backend"),
+    ("app/backend/balanceData.py", "backend"),
+    ("app/backend/deleteTransaction.py", "backend"),
+    ("app/backend/editTransaction.py", "backend"),
+    ("app/backend/receiveTransaction.py.py", "backend"),
+    ("app/backend/sendTransHistory.py", "backend"),
+    ("app/backend/updateGraph.py", "backend"),
 
     # app/views
     ("app/views/index.html", "views"),

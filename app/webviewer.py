@@ -6,7 +6,15 @@ from PyQt5.QtCore import QUrl
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWebEngineWidgets import QWebEngineView, QWebEngineSettings
 from PyQt5.QtWebChannel import QWebChannel
-from .backend import *
+
+from .backend.balanceData import BalanceData
+from .backend.receiveTransaction import receiveTransaction
+from .backend.sendTransHistory import sendTransHistory
+from .backend.editTransaction import editTransaction
+from .backend.deleteTransaction import deleteTransaction
+from .backend.updateGraph import updateGraph
+from .backend.backend import *
+
 import sys, os
 
 # Get the absolute path to the resource, for PyInstaller
