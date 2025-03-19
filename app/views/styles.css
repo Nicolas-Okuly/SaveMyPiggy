@@ -17,8 +17,8 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    -webkit-user-select: none;
     user-select: none;
-    -webkit-user-drag: none;
 }
 body {
     background-color: var(--light-background);
@@ -189,8 +189,8 @@ header img {
     color: red;
 }
 
-/* Button to blur sensetive data in the bottom right corner */
-#blur {
+/* Button to blur sensitive data in the bottom right corner */
+#blur, #add {
     position: fixed;
     background-color: var(--accent-color);
     border: none;
@@ -199,8 +199,13 @@ header img {
     bottom: 15px;
     right: 15px;
 }
-#blur:focus {
+#blur:focus, #add:focus {
     outline: none;
+}
+
+#add {
+    bottom: 100px;
+    right: 15px;
 }
 
 /* Set expenses or negative values to red and bold */
@@ -263,6 +268,7 @@ header img {
         font-size: 1.2rem;
     }
     .chart {
+        width: -moz-fit-content;
         width: fit-content;
         margin: 0 auto;
     }
@@ -304,3 +310,8 @@ header img {
 }
 #hist-table tr:nth-child(even) { background-color: var(--element-background); }
 #hist-table tr:hover td { background-color: #EEE; }
+
+
+footer {
+    margin: 12em;
+}

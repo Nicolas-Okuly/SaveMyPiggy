@@ -40,7 +40,9 @@ class BalanceData(QObject):
 
         # Get balance after
         cursor.execute("SELECT after FROM transactions ORDER BY id DESC LIMIT 1")
-        total_balance = cursor.fetchone()[0]
+        total_balance = cursor.fetchone()
+        total_balance = float(total_balance[0]) if total_balance else 0.0  # Extract value and handle None
+
 
         # Calculate percentages for categories
         income_category_data = [

@@ -14,11 +14,16 @@
         <script src="./scripts/modal.js" defer></script>
         <script src="./scripts/blur.js"></script>
 
+        <title>Finance Tracker</title>
     </head>
     <body>
         <!-- Button to blur sensitive data -->
         <button id="blur" title="Hide sensitive information" onclick="blurAll()">
             <img id="blurBtn" width="50px" src="./icons/eye-slash.svg" alt="Toggle visibility">
+        </button>
+
+        <button id="add" title="Add new transaction" onclick="openModal()">
+            <img src="./icons/add.svg" alt="Add Transaction" width="50px">
         </button>
 
         <!-- Navigation -->
@@ -130,7 +135,7 @@
                 <!-- Income vs Expense graph and data -->
                 <h2 id="bkmrk1">Income and Expenses Data</h2>
 
-                <select name="inc-exp-filt" id="income-filter">
+                <select name="inc-exp-filt" id="income-filter" title="Income Filter">
                     <option value="alltime">All time</option>
                     <option value="week">Last week</option>
                     <option value="month">Last month</option>
@@ -199,5 +204,9 @@
                 </table>
             </div>
         </main>
+
+        <footer>
+
+        </footer>
     </body>
 </html>

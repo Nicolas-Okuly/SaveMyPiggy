@@ -23,7 +23,14 @@ class sendTransHistory(QObject):
         transNumber = 0
         for trans in transaction_history:
             # transaction_history[transNumber]['cost'] = float(trans['amount'])
-            transaction_history[transNumber]['date'] = datetime.strptime(trans["date"], "%Y-%m-%dT%H:%M:%S.%fZ").isoformat()
+            # Convert Row object to a dictionary before modifying
+            transaction_history[transNumber] = dict(transaction_history[transNumber])
+
+            # Now modify the date
+            transaction_history[transNumber]['date'] = datetime.strptime(
+                trans["date"], "%Y-%m-%dT%H:%M:%S.%fZ"
+            ).isoformat()
+
             # transaction_history[transNumber]['after'] = float(trans['after'])
             transNumber += 1
 

@@ -1,5 +1,5 @@
 from .backend import *
-
+import json
 
 # For adding a new transaction
 class receiveTransaction(QObject):
@@ -11,24 +11,31 @@ class receiveTransaction(QObject):
 
     @pyqtSlot(str)
     def receiveTransactionData(self, data):
-        # Add a transaction to the users transactions
-
-        # Convert JSON to list
-        data = str(data).replace('[', '').replace(']', '').replace('"', '').split(',')
-        print(f'Got {str(data)}')
+        # Convert JSON string to list properly
+        data = json.loads(data)  # Parse correctly
+        print(f'Got {data}')
 
         conn = get_db_connection()
         cursor = conn.cursor()
 
-        # Calculate after value
+        # Get the last transaction
         cursor.execute("SELECT after FROM transactions ORDER BY id DESC LIMIT 1")
-        data[3] = float(data[3])
-        new_after = cursor.fetchone()[0] + data[3]
+        last_transaction = cursor.fetchone()
+
+        # Calculate `new_after` safely
+        if last_transaction:
+            new_after = float(last_transaction[0]) + float(data[1]) 
+        else:
+            new_after = float(data[1])
+
         data.append(new_after)
 
-        # Add data to database
-        cursor.executemany('INSERT INTO transactions (name, type, category, amount, date, after) VALUES (?, ?, ?, ?, ?, ?)', tuple(data))
+        # Insert into the database
+        cursor.execute(
+            'INSERT INTO transactions (name, amount, category, type, date, after) VALUES (?, ?, ?, ?, ?, ?)', 
+            tuple(data)
+        )
         conn.commit()
-
         conn.close()
+
         self.receiveTransaction.emit(True)

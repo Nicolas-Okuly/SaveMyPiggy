@@ -10,8 +10,11 @@ span.onclick = function() {
     modal.style.display = "none";
 }
 
+function openModal() {
+    modal.style.display = "block";
+}
+
 window.onclick = function(event) {
-    if (event.target == modal) {
+    if (event.target == modal)
         modal.style.display = "none";
-    }
 }
