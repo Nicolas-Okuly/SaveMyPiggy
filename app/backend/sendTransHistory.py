@@ -22,7 +22,6 @@ class sendTransHistory(QObject):
         # Make modifications to data
         transNumber = 0
         for trans in transaction_history:
-            # transaction_history[transNumber]['cost'] = float(trans['amount'])
             # Convert Row object to a dictionary before modifying
             transaction_history[transNumber] = dict(transaction_history[transNumber])
 

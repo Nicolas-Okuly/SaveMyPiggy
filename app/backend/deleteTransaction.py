@@ -11,13 +11,14 @@ class deleteTransaction(QObject):
 
     @pyqtSlot(str)
     def deleteTransaction(self, id):
+        print("Deleting id: " + id)
 
         id = int(id)
 
         conn = get_db_connection()
         cursor = conn.cursor()
 
-        cursor.execute('DELETE FROM transaction WHERE id = ?', (id))
+        cursor.execute(f"DELETE FROM transactions WHERE id = '{id}'")
         
         conn.commit()
         conn.close()

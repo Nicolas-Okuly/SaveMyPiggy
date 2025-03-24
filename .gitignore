@@ -1,5 +1,7 @@
 .venv
 */__pycache__
+*/*/__pycache__
+app/views/graphs/*.svg
 dist
 build
 *.spec

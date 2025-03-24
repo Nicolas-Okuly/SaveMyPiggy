@@ -45,14 +45,22 @@ class BalanceData(QObject):
 
 
         # Calculate percentages for categories
-        income_category_data = [
-            {"name": name, "value": value, "percentage": round((value / total_income) * 100, 2)}
-            for name, value in income_categories.items()
-        ]
-        expense_category_data = [
-            {"name": name, "value": value, "percentage": round((value / total_expense) * 100, 2)}
-            for name, value in expense_categories.items()
-        ]
+        if total_income <= 0:
+            income_category_data = []
+        else:
+            income_category_data = [
+                {"name": name, "value": value, "percentage": round((value / total_income) * 100, 2)}
+                for name, value in income_categories.items()
+            ]
+
+        if total_expense > 0:
+            expense_category_data = []
+
+        else:
+            expense_category_data = [
+                {"name": name, "value": value, "percentage": round((value / total_expense) * 100, 2)}
+                for name, value in expense_categories.items()
+            ]
 
         # Format the data
         balance_data = {

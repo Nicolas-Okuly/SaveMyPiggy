@@ -23,10 +23,17 @@ class receiveTransaction(QObject):
         last_transaction = cursor.fetchone()
 
         # Calculate `new_after` safely
-        if last_transaction:
-            new_after = float(last_transaction[0]) + float(data[1]) 
+        if data[3] == 'expense':
+            if last_transaction:
+                new_after = float(last_transaction[0]) - float(data[1]) 
+            else:
+                new_after = -1 * float(data[1])
+        
         else:
-            new_after = float(data[1])
+            if last_transaction:
+                new_after = float(last_transaction[0]) + float(data[1]) 
+            else:
+                new_after = float(data[1])
 
         data.append(new_after)
 
