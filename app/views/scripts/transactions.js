@@ -63,16 +63,10 @@ function transactionButtonClick(button, deleteTransaction) {
     globalData.forEach(async item => {
         let dateObj = new Date(item.date);
 
-        if(transaction == dateObj.getTime()) {
+        if(transaction == item.id) {
             if (action == "del") {
-                deleteTransaction.deleteTransaction(String([
-                    item.name,
-                    item.cost,
-                    item.category,
-                    item.type,
-                    item.date,
-                    item.after
-                ]));
+                deleteTransaction.deleteTransaction(Number(item.id));
+                window.location = window.location;
             } else {
                 const tableRow = document.getElementById(transaction);
 

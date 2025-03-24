@@ -118,19 +118,18 @@ async function handleTransData(data) {
         if (!categories.includes(item.category)) categories.push(item.category);
 
         document.getElementById("mrt-name").innerHTML = item.name;
-        document.getElementById("mrt-amt").innerHTML = item.cost;
+        document.getElementById("mrt-amt").innerHTML = item.amount;
         document.getElementById("mrt-date").innerHTML = date;
         document.getElementById("mrt-cat").innerHTML = item.category;
 
         newRow.insertCell(0).innerHTML = item.name;
-        newRow.insertCell(1).innerHTML = `<span class="money ${item.cost < 0 ? 'red':''}">$${item.cost}</span>`;
-        console.error(item.cost)
+        newRow.insertCell(1).innerHTML = `<span class="money ${item.amount < 0 ? 'red':''}">$${item.amount}</span>`;
         newRow.insertCell(2).innerHTML = `<span class="money ${item.after < 0 ? 'red':''}">$${item.after}</span>`;
         newRow.insertCell(3).innerHTML = date;
         newRow.insertCell(4).innerHTML = item.category;
         newRow.insertCell(5).innerHTML = item.type;
         newRow.insertCell(6).innerHTML = `<button id="del-${item.id}"><img width="25px" src="./icons/trash.svg" title="delete" alt="delete"></button><button id="edit-${dateObj.getTime()}"><img width="25px" src="./icons/edit.svg" title="edit" alt="edit"></button>`;
-        newRow.id = dateObj.getTime();
+        newRow.id = item.id;
     });
 
     globalData = data;
