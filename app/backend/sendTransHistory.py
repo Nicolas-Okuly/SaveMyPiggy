@@ -14,6 +14,8 @@ class sendTransHistory(QObject):
 
         # Send all of the users transaction history as a list of dictionaries
 
+        updateData()
+
         conn = get_db_connection()
         cursor = conn.cursor()
         cursor.execute("SELECT * FROM transactions ORDER BY date ASC")

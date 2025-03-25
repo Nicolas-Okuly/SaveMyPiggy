@@ -24,14 +24,12 @@ class editTransaction(QObject):
         changeID = int(changes["id"])
         changesRow = changes["changes"] 
 
-        query = 'UPDATE transaction SET '
         for key in changesRow.keys():
-            query += key + " = '" + changesRow[key] + "', "
-
-        query += 'WHERE id = ' + changeID
-        cursor.execute(query)
+            cursor.execute(f'UPDATE transactions SET {key} = ? WHERE id = ?', (changesRow[key], changeID))
 
         conn.commit()
         conn.close()
+
+        updateData()
 
         self.editTransactionSignal.emit(True)

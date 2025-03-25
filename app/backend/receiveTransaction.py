@@ -45,4 +45,6 @@ class receiveTransaction(QObject):
         conn.commit()
         conn.close()
 
+        updateData()
+
         self.receiveTransaction.emit(True)

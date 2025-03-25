@@ -22,4 +22,6 @@ class deleteTransaction(QObject):
         
         conn.commit()
         conn.close()
+
+        updateData()
         self.deleteTransactionSignal.emit(True)

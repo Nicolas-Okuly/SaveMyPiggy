@@ -34,7 +34,6 @@ class updateGraph(QObject):
         cursor.execute("SELECT * FROM transactions WHERE type = 'income' AND date BETWEEN ? AND ?", (dateStart, now))
         rows = cursor.fetchall()
         for row in rows:
-            print(row)
             income_categories[row['category']] += float(row['amount'])
             total_income += float(row['amount'])
         
@@ -43,7 +42,6 @@ class updateGraph(QObject):
         cursor.execute("SELECT * FROM transactions WHERE type = 'expense' AND date BETWEEN ? AND ?", (dateStart, now))
         rows = cursor.fetchall()
         for row in rows:
-            print(row)
             expense_categories[row['category']] += float(row['amount'])
             total_expense += float(row['amount'])
 
@@ -55,4 +53,11 @@ class updateGraph(QObject):
 
         # Make sure these are properly formatted with the transaction list
         graphs.IncomeCatPie(list(income_categories.values()), list(income_categories.keys()))
+
+        if total_income <= 0:
+            graphs.BlankGraphs()
+
+        if total_expense <= 0:
+            graphs.BlankGraphs()
+
         self.updateGraphSignal.emit(True)

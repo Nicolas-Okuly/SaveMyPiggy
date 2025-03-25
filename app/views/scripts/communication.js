@@ -164,7 +164,7 @@ async function processFormInput(form) {
 
     return [
         transactionName,
-        transactionAmount,
+        transactionAmount.replace("$", ""),
         transactionCategory,
         transactionType,
         new Date(transactionDate)

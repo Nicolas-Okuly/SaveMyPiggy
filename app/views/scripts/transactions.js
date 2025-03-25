@@ -104,7 +104,7 @@ function transactionButtonClick(button, deleteTransaction, editTransaction) {
                     } else { // Other input fields
                         if (cells[i].getElementsByTagName("input").length > 0) {
                             let input = cells[i].getElementsByTagName("input")[0];
-                            let newValue = input.value;
+                            let newValue = input.value.replace("$", "");
                             let key = i === 0 ? "name" : i === 4 ? "category" : "amount";
                             if (newValue !== item[key]) {
                                 changes[key] = newValue;
@@ -123,6 +123,7 @@ function transactionButtonClick(button, deleteTransaction, editTransaction) {
 
                 if (Object.keys(changes).length > 0) {
                     editTransaction.updateTransaction(JSON.stringify({ id: item.id, changes }));
+                    window.location = window.location;
                 }
             }
         }

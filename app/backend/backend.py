@@ -11,7 +11,6 @@ from collections import defaultdict
 from datetime import datetime, timedelta
 
 
-# DONE
 # For testing back to front communications
 class BackendTest(QObject):
     sendDataToJs = pyqtSignal(str)
@@ -26,7 +25,6 @@ class BackendTest(QObject):
         self.sendDataToJs.emit(f"Hello, {message}! This is Python.")
 
 
-# DONE
 # Returns the path to the AppData folder based on the operating system.
 def get_appdata_folder():
     system = platform.system()
@@ -40,7 +38,6 @@ def get_appdata_folder():
         raise OSError("Unsupported operating system")
 
 
-# DONE
 # Opens and creates a connection with db file, return the connection
 def get_db_connection():
    db_path = os.path.join(get_appdata_folder(), "transactions.db")
@@ -67,6 +64,7 @@ def create_file_if_absent():
    conn.commit()
    conn.close()
 
+
 # Returns the starting day of each time span
 def rangeStart(date):
     now = datetime.now()
@@ -78,3 +76,26 @@ def rangeStart(date):
     elif(date == "year"):
         return now - timedelta(days = 365)
     return datetime(1, 1, 1)
+
+
+# Updates the 'after' amounts after any change in transactions
+def updateData():
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT * FROM transactions ORDER BY date DESC")
+    data = cursor.fetchall()
+
+    currAfter = 0
+
+    for trans in data:
+        currId = trans['id']
+        if trans['type'] == 'expense':
+            currAfter -= trans['amount']
+        else:
+            currAfter += trans['amount']
+        cursor.execute('UPDATE transactions SET after = ? WHERE id = ?', (currAfter, currId))
+    
+    conn.commit()
+    conn.close()
+    

@@ -18,6 +18,8 @@ class BalanceData(QObject):
         total_income = 0 
         total_expense = 0
 
+        updateData()
+        
         dateStart = rangeStart(date)
         now = datetime.now()
 
@@ -39,7 +41,7 @@ class BalanceData(QObject):
             total_expense += float(row['amount'])
 
         # Get balance after
-        cursor.execute("SELECT after FROM transactions ORDER BY id DESC LIMIT 1")
+        cursor.execute("SELECT after FROM transactions ORDER BY date DESC LIMIT 1")
         total_balance = cursor.fetchone()
         total_balance = float(total_balance[0]) if total_balance else 0.0  # Extract value and handle None
 
