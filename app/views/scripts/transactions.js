@@ -56,28 +56,30 @@ document.getElementById("trans-search").addEventListener("keyup", function (even
  * 
  * @param {HTMLButtonElement} button 
  */
-function transactionButtonClick(button, deleteTransaction) {
+function transactionButtonClick(button, deleteTransaction, editTransaction) {
     let action = button.id.split("-")[0];
     let transaction = button.id.split("-")[1];
 
     globalData.forEach(async item => {
-        let dateObj = new Date(item.date);
-
-        if(transaction == item.id) {
+        if (transaction == item.id) {
             if (action == "del") {
                 deleteTransaction.deleteTransaction(Number(item.id));
                 window.location = window.location;
-            } else {
+            } else if (action == "edit") {
                 const tableRow = document.getElementById(transaction);
-
                 const cells = tableRow.getElementsByTagName("td");
+                let changes = {};
+
                 for (let i = 0; i < cells.length - 1; i++) {
-                    if (i === 2) continue;
-                    if (i === 3) continue;
-                    if (i === 5) {
+                    if (i === 2 || i === 3) continue;
+                    if (i === 5) { // Type selection
                         if (cells[i].getElementsByTagName("select").length > 0) {
                             let select = cells[i].getElementsByTagName("select")[0];
-                            cells[i].innerText = select.value;
+                            let newValue = select.value;
+                            if (newValue !== item.type) {
+                                changes["type"] = newValue;
+                            }
+                            cells[i].innerText = newValue;
                         } else {
                             let select = document.createElement("select");
                             let incomeOption = document.createElement("option");
@@ -86,7 +88,7 @@ function transactionButtonClick(button, deleteTransaction) {
                             let expenseOption = document.createElement("option");
                             expenseOption.value = "expense";
                             expenseOption.text = "Expense";
-
+                            
                             select.appendChild(incomeOption);
                             select.appendChild(expenseOption);
 
@@ -99,10 +101,15 @@ function transactionButtonClick(button, deleteTransaction) {
                             cells[i].innerText = "";
                             cells[i].appendChild(select);
                         }
-                    } else {
+                    } else { // Other input fields
                         if (cells[i].getElementsByTagName("input").length > 0) {
                             let input = cells[i].getElementsByTagName("input")[0];
-                            cells[i].innerText = input.value;
+                            let newValue = input.value;
+                            let key = i === 0 ? "name" : i === 4 ? "category" : "amount";
+                            if (newValue !== item[key]) {
+                                changes[key] = newValue;
+                            }
+                            cells[i].innerText = newValue;
                         } else {
                             let input = document.createElement("input");
                             input.type = "text";
@@ -112,6 +119,10 @@ function transactionButtonClick(button, deleteTransaction) {
                             cells[i].appendChild(input);
                         }
                     }
+                }
+
+                if (Object.keys(changes).length > 0) {
+                    editTransaction.updateTransaction(JSON.stringify({ id: item.id, changes }));
                 }
             }
         }

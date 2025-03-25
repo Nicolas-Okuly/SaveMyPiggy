@@ -4,6 +4,7 @@ let sendTrans;
 let updateGraphs;
 let receiveTransaction;
 let deleteTransaction;
+let editTransaction;
 var globalData;
 
 // Create the web channel
@@ -16,6 +17,7 @@ new QWebChannel(qt.webChannelTransport, function (channel) {
     updateGraphs = channel.objects.updateGraphs;
     receiveTransaction = channel.objects.receiveTransaction;
     deleteTransaction = channel.objects.deleteTransaction;
+    editTransaction = channel.objects.editTransaction;
 
     sendBalance.sendBalanceData.connect(function (message) {
         // Format the message to JSON and send it to the handler function.
@@ -38,7 +40,7 @@ new QWebChannel(qt.webChannelTransport, function (channel) {
 
         await document.querySelectorAll("button").forEach(async (button) => {
             await button.addEventListener("click", async (event) => {
-                transactionButtonClick(button, deleteTransaction); // Declared in transactions.js
+                transactionButtonClick(button, deleteTransaction, editTransaction); // Declared in transactions.js
             });
         });
     });
@@ -77,11 +79,11 @@ function handleBalData(data) {
 
 
     data.incomeCats.forEach(cat => {
-        incomeCats.innerHTML += `<li>${cat.name} - $${cat.value} - %${cat.percentage}</li>`
+        incomeCats.innerHTML += `<li>${cat.name} - $${cat.value} - ${cat.percentage}%</li>`
     });
 
     data.expenseCats.forEach(cat => {
-        expenseCats.innerHTML += `<li>${cat.name} - $${cat.value} - %${cat.percentage}</li>`
+        expenseCats.innerHTML += `<li>${cat.name} - $${cat.value} - ${cat.percentage}%</li>`
     });
 
    balance.innerHTML += balInjection;
@@ -122,14 +124,13 @@ async function handleTransData(data) {
         document.getElementById("mrt-date").innerHTML = date;
         document.getElementById("mrt-cat").innerHTML = item.category;
 
-        console.error(dateObj)
         newRow.insertCell(0).innerHTML = item.name;
         newRow.insertCell(1).innerHTML = `<span class="money ${item.amount < 0 ? 'red':''}">$${item.amount}</span>`;
         newRow.insertCell(2).innerHTML = `<span class="money ${item.after < 0 ? 'red':''}">$${item.after}</span>`;
         newRow.insertCell(3).innerHTML = date;
         newRow.insertCell(4).innerHTML = item.category;
         newRow.insertCell(5).innerHTML = item.type;
-        newRow.insertCell(6).innerHTML = `<button id="del-${item.id}"><img width="25px" src="./icons/trash.svg" title="delete" alt="delete"></button><button id="edit-${dateObj.getTime()}"><img width="25px" src="./icons/edit.svg" title="edit" alt="edit"></button>`;
+        newRow.insertCell(6).innerHTML = `<button id="del-${item.id}"><img width="25px" src="./icons/trash.svg" title="delete" alt="delete"></button><button id="edit-${item.id}"><img width="25px" src="./icons/edit.svg" title="edit" alt="edit"></button>`;
         newRow.id = item.id;
     });
 

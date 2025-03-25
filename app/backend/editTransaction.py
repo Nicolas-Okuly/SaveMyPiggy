@@ -13,7 +13,7 @@ class editTransaction(QObject):
     def updateTransaction(self, data):
         '''
             I will send it to you as a JSON Object:
-            { "id": "whatever it may be (possibly an int)", "changes: { "name/amount/category/date/type": "new data" } }
+            { "id": "whatever it may be (possibly an int)", "changes: { "name/amount/category/type": "new data" } }
         '''
 
         changes = json.loads(data)
