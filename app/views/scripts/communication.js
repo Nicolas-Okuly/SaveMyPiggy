@@ -122,6 +122,7 @@ async function handleTransData(data) {
         document.getElementById("mrt-date").innerHTML = date;
         document.getElementById("mrt-cat").innerHTML = item.category;
 
+        console.error(dateObj)
         newRow.insertCell(0).innerHTML = item.name;
         newRow.insertCell(1).innerHTML = `<span class="money ${item.amount < 0 ? 'red':''}">$${item.amount}</span>`;
         newRow.insertCell(2).innerHTML = `<span class="money ${item.after < 0 ? 'red':''}">$${item.after}</span>`;

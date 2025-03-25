@@ -16,7 +16,7 @@ class sendTransHistory(QObject):
 
         conn = get_db_connection()
         cursor = conn.cursor()
-        cursor.execute("SELECT * FROM transactions")
+        cursor.execute("SELECT * FROM transactions ORDER BY date ASC")
         transaction_history = cursor.fetchall()
 
         # Make modifications to data
@@ -30,7 +30,6 @@ class sendTransHistory(QObject):
                 trans["date"], "%Y-%m-%dT%H:%M:%S.%fZ"
             ).isoformat()
 
-            # transaction_history[transNumber]['after'] = float(trans['after'])
             transNumber += 1
 
         conn.close()

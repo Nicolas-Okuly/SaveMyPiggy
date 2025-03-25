@@ -19,7 +19,7 @@ class receiveTransaction(QObject):
         cursor = conn.cursor()
 
         # Get the last transaction
-        cursor.execute("SELECT after FROM transactions ORDER BY id DESC LIMIT 1")
+        cursor.execute("SELECT after FROM transactions ORDER BY date DESC LIMIT 1")
         last_transaction = cursor.fetchone()
 
         # Calculate `new_after` safely

@@ -35,7 +35,7 @@ class BalanceData(QObject):
         cursor.execute("SELECT * FROM transactions WHERE type = 'expense' AND date BETWEEN ? AND ?", (dateStart, now))
         rows = cursor.fetchall()
         for row in rows:
-            income_categories[row['category']] += float(row['amount'])
+            expense_categories[row['category']] += float(row['amount'])
             total_expense += float(row['amount'])
 
         # Get balance after

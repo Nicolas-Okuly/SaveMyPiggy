@@ -34,14 +34,17 @@ class updateGraph(QObject):
         cursor.execute("SELECT * FROM transactions WHERE type = 'income' AND date BETWEEN ? AND ?", (dateStart, now))
         rows = cursor.fetchall()
         for row in rows:
+            print(row)
             income_categories[row['category']] += float(row['amount'])
             total_income += float(row['amount'])
+        
 
         # Get expenses data
         cursor.execute("SELECT * FROM transactions WHERE type = 'expense' AND date BETWEEN ? AND ?", (dateStart, now))
         rows = cursor.fetchall()
         for row in rows:
-            income_categories[row['category']] += float(row['amount'])
+            print(row)
+            expense_categories[row['category']] += float(row['amount'])
             total_expense += float(row['amount'])
 
 
