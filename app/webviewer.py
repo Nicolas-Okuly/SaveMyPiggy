@@ -35,13 +35,13 @@ class WebApp(QMainWindow):
         super().__init__()
         self.setWindowTitle("Finance Tracker")
         self.setGeometry(100, 100, 800, 600)
+        self.showMaximized()
         self.setWindowIcon(QIcon("icon.ico"))
 
         # Initialize the webview and load the html files
         webview = QWebEngineView()
         # webview.setContextMenuPolicy(False)
-        start_page = resource_path("views\index.html").replace('\\', '/')
-        print(start_page)
+        start_page = resource_path("views\pin.html").replace('\\', '/')
         webview.setUrl(QUrl(f"{start_page}"))
 
         # Enable CORs
