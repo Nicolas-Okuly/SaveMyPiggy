@@ -61,6 +61,14 @@ def create_file_if_absent():
                after REAL NOT NULL
            )
        ''')
+   cursor.execute('''
+           CREATE TABLE IF NOT EXISTS pin (
+               pin INTEGER
+           )
+       ''')
+   cursor.execute('SELECT COUNT(*) FROM pin')
+   if cursor.fetchone()[0] == 0:
+       cursor.execute('INSERT INTO pin (pin) VALUES (0)')
    conn.commit()
    conn.close()
 

@@ -28,9 +28,9 @@ class sendTransHistory(QObject):
             transaction_history[transNumber] = dict(transaction_history[transNumber])
 
             # Now modify the date
-            transaction_history[transNumber]['date'] = datetime.strptime(
-                trans["date"], "%Y-%m-%dT%H:%M:%S.%fZ"
-            ).isoformat()
+            dt_obj = datetime.strptime(trans['date'], "%Y-%m-%d %H:%M:%S")
+
+            transaction_history[transNumber]['date'] = dt_obj.strftime("%Y-%m-%dT%H:%M:%S.%fZ")
 
             transNumber += 1
 

@@ -1,5 +1,5 @@
 from .backend import *
-import json
+
 
 # For adding a new transaction
 class receiveTransaction(QObject):
@@ -34,6 +34,8 @@ class receiveTransaction(QObject):
                 new_after = float(last_transaction[0]) + float(data[1]) 
             else:
                 new_after = float(data[1])
+        
+        data[4] = str(datetime.strptime(data[4], "%Y-%m-%dT%H:%M:%S.%fZ"))
 
         data.append(new_after)
 

@@ -55,9 +55,8 @@ class BalanceData(QObject):
                 for name, value in income_categories.items()
             ]
 
-        if total_expense > 0:
+        if total_expense <= 0:
             expense_category_data = []
-
         else:
             expense_category_data = [
                 {"name": name, "value": value, "percentage": round((value / total_expense) * 100, 2)}
