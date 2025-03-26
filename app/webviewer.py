@@ -16,7 +16,10 @@ from .backend.updateGraph import updateGraph
 from .backend.pin import GetPin, SetPin
 from .backend.backend import *
 
-import sys, os
+import sys, os, logging
+
+# Configure logging
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 
 # Get the absolute path to the resource, for PyInstaller
 def resource_path(relative_path):
@@ -37,7 +40,8 @@ class WebApp(QMainWindow):
         self.setWindowTitle("Finance Tracker")
         self.setGeometry(100, 100, 800, 600)
         self.showMaximized()
-        self.setWindowIcon(QIcon("icon.ico"))
+        self.setWindowIcon(QIcon("icon.ico"))  # Set the window icon
+        QApplication.instance().setWindowIcon(QIcon("icon.ico"))  # Set the taskbar icon explicitly
 
         # Initialize the webview and load the html files
         webview = QWebEngineView()
@@ -89,8 +93,15 @@ class WebApp(QMainWindow):
 
 # Declare the startup app
 def RunApp():
-    # Initialize and application and start it
-    app = QApplication(sys.argv)
-    main_window = WebApp()
-    main_window.show()
-    sys.exit(app.exec_())
+    """Initialize and start the application."""
+    try:
+        logging.info("Starting the application...")
+        app = QApplication(sys.argv)
+        icon_path = resource_path("icon.ico")  # Ensure the icon path is absolute
+        app.setWindowIcon(QIcon(icon_path))   # Set the taskbar icon explicitly
+        main_window = WebApp()
+        main_window.show()
+        sys.exit(app.exec_())
+    except Exception as e:
+        logging.error(f"An error occurred: {e}")
+        sys.exit(1)

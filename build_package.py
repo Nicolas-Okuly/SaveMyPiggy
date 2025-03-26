@@ -11,20 +11,23 @@ files = [
     ("app/graphGenerator.py", "app"),
     ("app/webviewer.py", "app"),
 
-    # backend
+    # app/backend
     ("app/backend/backend.py", "backend"),
     ("app/backend/balanceData.py", "backend"),
     ("app/backend/deleteTransaction.py", "backend"),
     ("app/backend/editTransaction.py", "backend"),
-    ("app/backend/receiveTransaction.py.py", "backend"),
+    ("app/backend/receiveTransaction.py", "backend"),
     ("app/backend/sendTransHistory.py", "backend"),
     ("app/backend/updateGraph.py", "backend"),
+    ("app/backend/pin.py", "backend"),
 
     # app/views
     ("app/views/index.html", "views"),
     ("app/views/styles.css", "views"),
     ("app/views/help.css", "views"),
     ("app/views/help.html", "views"),
+    ("app/views/nopin.html", "views"),
+    ("app/views/pin.html", "views"),
 
     # app/views/scripts
     ("app/views/scripts/blur.js", "views/scripts"),
@@ -32,11 +35,13 @@ files = [
     ("app/views/scripts/qwebchannel.js", "views/scripts"),
     ("app/views/scripts/transactions.js", "views/scripts"),
     ("app/views/scripts/modal.js", "views/scripts"),
+    ("app/views/scripts/pin.js", "views/scripts"),
 
     # app/views/graphs
     ("app/views/graphs/expense-pie.svg", "views/graphs"),
     ("app/views/graphs/income-pie.svg", "views/graphs"),
     ("app/views/graphs/incomevexpense.svg", "views/graphs"),
+    ("app/views/graphs/placeholder.png", "views/graphs"),
 
     # app/views/icons
     ("app/views/icons/edit.svg", "views/icons"),
@@ -44,6 +49,7 @@ files = [
     ("app/views/icons/eye.svg", "views/icons"),
     ("app/views/icons/piggybank.svg", "views/icons"),
     ("app/views/icons/trash.svg", "views/icons"),
+    ("app/views/icons/add.svg", "views/icons"),
 
     # Root
     ("icon.ico", "./")

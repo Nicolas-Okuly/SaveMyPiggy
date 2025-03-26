@@ -36,7 +36,6 @@ body::-webkit-scrollbar-track {
 }
 body::-webkit-scrollbar-thumb {
     background-color: var(--dark-background);
-    opacity: 0.9;
     outline: none;
     border: none;
 }
@@ -44,7 +43,7 @@ body::-webkit-scrollbar-thumb {
 /* Set fonts */
 h1, h2, h3, h4, h5, h6 {
     font-family: var(--header-font);
-    color: var(--header-color)
+    color: var(--header-color);
 }
 .money {
     font-family: var(--financial-font);
@@ -61,18 +60,25 @@ nav {
     top: 0;
     background-color: var(--dark-background);
     width: 100%;
-    padding: 12px;
+    padding: 15px 20px; /* Adjusted padding for better spacing */
     display: flex;
-    justify-content: space-evenly;
+    justify-content: center; /* Center-align the navigation items */
+    align-items: center; /* Ensure vertical alignment */
 }
 nav a, nav a:visited {
     color: var(--accent-color);
     text-decoration: none;
+    margin: 0 25px;
     font-size: 1.2em;
 }
 nav a:hover {
     color: #21884c;
     text-decoration: underline;
+}
+/* Accessibility: Add focus styles for nav links */
+nav a:focus {
+    outline: 2px solid var(--accent-color);
+    outline-offset: 2px;
 }
 
 @media (max-width: 786px) {
@@ -112,16 +118,17 @@ nav a:hover {
 /* Style the header at the top of the page */
 header {
     background-color: var(--element-background);
-    text-align: right;
+    text-align: left;
     padding: 15px;
     font-size: 1.2em;
     color: var(--text-color);
     display: flex;
-    justify-content: space-evenly;
+    justify-content: center;
     align-items: center;
 }
 header img {
     width: 100px;
+    margin-left: 50px;
 }
 .vert-line {
     height: 100%;
@@ -129,7 +136,14 @@ header img {
 }
 @media (max-width: 630px) {
     header {
-        text-align: left;
+        text-align: center;
+        width: 100%;
+        display: block;
+    }
+    header > *,
+    header > img {
+        display: block;
+        margin: 0 auto;
     }
     .quick-row { flex-direction: column; }
     .quick-row > * { width: 90%; margin: 10px auto; }
@@ -199,10 +213,14 @@ header img {
     bottom: 15px;
     right: 15px;
 }
-#blur:focus, #add:focus {
-    outline: none;
+#blur:hover, #add:hover {
+    background-color: #21884c;
+    cursor: pointer;
 }
-
+#blur:focus, #add:focus {
+    outline: 2px solid var(--accent-color);
+    outline-offset: 2px;
+}
 #add {
     bottom: 100px;
     right: 15px;
@@ -295,6 +313,7 @@ header img {
 #hist-table {
     border-collapse: collapse;
     border: 1px solid black;
+    border-radius: 5px;
     margin: 15px auto;
     font-size: 1.2em;
 }

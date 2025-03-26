@@ -85,7 +85,7 @@
                     <br>
                     
                     <label for="trans-name" class="required">Transaction Name:</label>
-                    <input name="name" id="trans-name" type="text" placeholder="Safeway" required>
+                    <input name="name" id="trans-name" type="text" placeholder="Safeway" maxlength="12" required>
                     <br>
 
                     <label for="trans-amt" class="required">Transaction Amount:</label>
@@ -93,7 +93,7 @@
                     <br>
 
                     <label for="trans-date" class="required">Transaction Date:</label>
-                    <input name="date" type="datetime-local" id="trans-date" required>
+                    <input name="date" type="datetime-local" id="trans-date" required max="9999-12-31T23:59">
                     <br>
 
                     <label for="trans-category" class="required">Transaction Category:</label>
@@ -117,7 +117,7 @@
 
                     <div class="hidden" id="hidden-new-cat">
                         <label for="trans-new-category" class="required">New Category Name:</label>
-                        <input name="new-category" type="text" id="trans-new-category" placeholder="Grocery Shopping">
+                        <input maxlength="12" name="new-category" type="text" id="trans-new-category" placeholder="Grocery Shopping">
                     </div>
 
                     <label for="trans-type" class="required">Transaction Type:</label>
