@@ -17,7 +17,6 @@ new QWebChannel(qt.webChannelTransport, (channel) => {
     });
 
     setPin.sendSetPin.connect(async (message) => {
-        console.error(message);
     });
 
     getPin.receivePinData();

@@ -99,9 +99,9 @@ def updateData():
     for trans in data:
         currId = trans['id']
         if trans['type'] == 'expense':
-            currAfter -= trans['amount']
+            currAfter -= float(trans['amount'])
         else:
-            currAfter += trans['amount']
+            currAfter += float(trans['amount'])
         cursor.execute('UPDATE transactions SET after = ? WHERE id = ?', (currAfter, currId))
     
     conn.commit()

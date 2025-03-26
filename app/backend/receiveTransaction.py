@@ -22,18 +22,20 @@ class receiveTransaction(QObject):
         cursor.execute("SELECT after FROM transactions ORDER BY date DESC LIMIT 1")
         last_transaction = cursor.fetchone()
 
+        data[1] = round(float(data[1]), 2)
+
         # Calculate `new_after` safely
         if data[3] == 'expense':
             if last_transaction:
-                new_after = float(last_transaction[0]) - float(data[1]) 
+                new_after = float(last_transaction[0]) - data[1]
             else:
-                new_after = -1 * float(data[1])
+                new_after = -1 * data[1]
         
         else:
             if last_transaction:
-                new_after = float(last_transaction[0]) + float(data[1]) 
+                new_after = float(last_transaction[0]) + data[1] 
             else:
-                new_after = float(data[1])
+                new_after = data[1]
         
         data[4] = str(datetime.strptime(data[4], "%Y-%m-%dT%H:%M:%S.%fZ"))
 

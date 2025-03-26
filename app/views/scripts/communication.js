@@ -111,18 +111,21 @@ async function handleTransData(data) {
     const table = document.getElementById("hist-table");
 
     let categories = [];
+    let i = false;
     await data.forEach(async (item) => {
         const newRow = table.insertRow(table.rows.span);
 
         let dateObj = new Date(item.date);
-        let date = `${dateObj.getMonth() + 1}/${dateObj.getDay()}/${dateObj.getFullYear()}`;
-
+        let date = dateObj.toString().split(" G")[0];
         if (!categories.includes(item.category)) categories.push(item.category);
 
-        document.getElementById("mrt-name").innerHTML = item.name;
-        document.getElementById("mrt-amt").innerHTML = item.amount;
-        document.getElementById("mrt-date").innerHTML = date;
-        document.getElementById("mrt-cat").innerHTML = item.category;
+        if(!i) {
+            document.getElementById("mrt-name").innerHTML = item.name;
+            document.getElementById("mrt-amt").innerHTML = item.amount;
+            document.getElementById("mrt-date").innerHTML = date;
+            document.getElementById("mrt-cat").innerHTML = item.category;
+            i = true;
+        }
 
         newRow.insertCell(0).innerHTML = item.name;
         newRow.insertCell(1).innerHTML = `<span class="money ${item.amount < 0 ? 'red':''}">$${item.amount}</span>`;
