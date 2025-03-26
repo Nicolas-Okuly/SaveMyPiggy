@@ -13,6 +13,7 @@ from .backend.sendTransHistory import sendTransHistory
 from .backend.editTransaction import editTransaction
 from .backend.deleteTransaction import deleteTransaction
 from .backend.updateGraph import updateGraph
+from .backend.pin import GetPin, SetPin
 from .backend.backend import *
 
 import sys, os
@@ -60,6 +61,8 @@ class WebApp(QMainWindow):
         self.receiveTransaction = receiveTransaction()
         self.deleteTransaction = deleteTransaction()
         self.editTransaction = editTransaction()
+        self.getPin = GetPin()
+        self.setPin = SetPin()
 
         # Register the objects for use in the backend
         self.channel.registerObject("testBackend", self.testBackend)
@@ -69,6 +72,8 @@ class WebApp(QMainWindow):
         self.channel.registerObject("receiveTransaction", self.receiveTransaction)
         self.channel.registerObject("deleteTransaction", self.deleteTransaction)
         self.channel.registerObject("editTransaction", self.editTransaction)
+        self.channel.registerObject("getPin", self.getPin)
+        self.channel.registerObject("setPin", self.setPin)
 
         # Set the channel to the page
         webview.page().setWebChannel(self.channel)

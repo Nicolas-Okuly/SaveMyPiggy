@@ -46,7 +46,7 @@ def get_db_connection():
    return conn
 
 
-# Check if the CSV file exists; if not, create an empty one
+# Check if the SQL file exists; if not, create an empty one
 def create_file_if_absent():
    conn = get_db_connection()
    cursor = conn.cursor()
