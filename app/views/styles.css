@@ -108,6 +108,7 @@ nav a:focus {
 }
 .align-left {
     text-align: left;
+    padding: 5px;
 }
 
 #modal-open {

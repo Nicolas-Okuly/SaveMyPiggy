@@ -39,7 +39,7 @@
                 <h1>Finance Tracker</h1>
                 <!-- Show balance -->
                 <h2 id="debug"></h2>
-                <h2 id="current_balance">Your current balance is: </h2>
+                <h2>Your current balance is: <span style="font-size: 1.2em;" id="current_balance"></span></h2>
             </div>
 
             <!-- Piggy bank Icon -->
@@ -53,13 +53,13 @@
             <div class="quick-actions">
                 <h2>Quick Actions</h2>
                 <div class="quick-row">
-                    <div>
+                    <div style="padding: 7px 21px">
                         <h3>Most Recent Transaction</h3>
                         <span class="align-left">
-                            <h4 id="mrt-name"></h4>
-                            <p>$<span id="mrt-amt" class="money"></span></p>
-                            <p>Date: <span id="mrt-date"></span></p>
-                            <p>Category: <span id="mrt-cat"></span></p>
+                            <h4 id="mrt-name">No Recent Transactions</h4>
+                            <p>$<span id="mrt-amt" class="money">00.00</span></p>
+                            <p>Date: <span id="mrt-date">N/A</span></p>
+                            <p>Category: <span id="mrt-cat">N/A</span></p>
                         </span>
                     </div>
 
