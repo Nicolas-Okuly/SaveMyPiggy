@@ -22,6 +22,10 @@
                 border: 1px solid #CCC;
                 border-radius: 5px;
             }
+            #error {
+                color: red;
+                font-weight: bold;
+            }
 
 
         </style>
@@ -31,7 +35,8 @@
         <script src="./scripts/pin.js" defer></script>
     </head>
     <body>
-        <h1>Please input your pin below</h1>
+        <h1>Please Input Your Pin Below</h1>
+        <p id="error"></p>
 
         <form id="pin-form">
             <input class="pin-input" type="number" name="1" id="num1" placeholder="1" autocomplete="off" onkeydown="handleBackspace(event, this, 0)" oninput="moveNext(this, 0)" min="0" required>
@@ -81,10 +86,26 @@
                 if (event.key === "ArrowRight") inputs[index + 1].focus();
             }
 
+            function getPinInt() {
+                // Get all four input fields by their IDs
+                const num1 = document.getElementById('num1').value;
+                const num2 = document.getElementById('num2').value;
+                const num3 = document.getElementById('num3').value;
+                const num4 = document.getElementById('num4').value;
+                
+                // Combine the values into a single string or variable
+                const pin = String(num1) + String(num2) + String(num3) + String(num4);
+
+                // Optionally, log the pin or use it as needed
+                console.log(pin);
+                return pin;
+            }
+
+
             document.getElementById("pin-form").addEventListener("submit", (e) => {
                 e.preventDefault();
 
-                window.location = "index.html";
+                handlePinData(getPinInt())
             });
         </script>
     </body>

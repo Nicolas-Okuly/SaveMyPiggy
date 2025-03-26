@@ -10,7 +10,7 @@ class GetPin(QObject):
     def receivePinData(self):
         # send pin data or 0 if the pin is unset
 
-        self.sendPinData.emit(0) # Test data
+        self.sendPinData.emit(1234) # Test data
 
 class SetPin(QObject):
     sendSetPin = pyqtSignal(bool)
