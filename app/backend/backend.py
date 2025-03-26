@@ -91,7 +91,7 @@ def updateData():
     conn = get_db_connection()
     cursor = conn.cursor()
 
-    cursor.execute("SELECT * FROM transactions ORDER BY date DESC")
+    cursor.execute("SELECT * FROM transactions ORDER BY date ASC")
     data = cursor.fetchall()
 
     currAfter = 0
