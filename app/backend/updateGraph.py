@@ -11,9 +11,6 @@ class updateGraph(QObject):
 
     @pyqtSlot(str)
     def updateGraph(self, date):
-        '''
-            When doing backend, please make sure that the date is properly applied and filtered
-        '''
         print(f"Updating graphs with {date}")
 
         # Insert functions that will update all the graphs
@@ -33,20 +30,16 @@ class updateGraph(QObject):
         # Get income data
         cursor.execute("SELECT * FROM transactions WHERE type = 'income' AND date BETWEEN ? AND ?", (dateStart, now))
         rows = cursor.fetchall()
-        print(rows)
         for row in rows:
             income_categories[row['category']] += float(row['amount'])
             total_income += float(row['amount'])
         
-
         # Get expenses data
         cursor.execute("SELECT * FROM transactions WHERE type = 'expense' AND date BETWEEN ? AND ?", (dateStart, now))
         rows = cursor.fetchall()
-        print(rows)
         for row in rows:
             expense_categories[row['category']] += float(row['amount'])
             total_expense += float(row['amount'])
-
 
         graphs.incvexpGraph(total_income, total_expense) # Make sure function that pulls balance data happens here
 
@@ -56,8 +49,6 @@ class updateGraph(QObject):
         # Make sure these are properly formatted with the transaction list
         graphs.IncomeCatPie(list(income_categories.values()), list(income_categories.keys()))
 
-        print(total_expense)
-        print(total_income)
         noIncome = False
         noExpense = False
         if total_income <= 0:
@@ -66,9 +57,6 @@ class updateGraph(QObject):
         if total_expense <= 0:
             noExpense = True
 
-        print(noExpense)
-        print(noIncome)
         graphs.BlankGraphs(noIncome, noExpense)
         
-
         self.updateGraphSignal.emit(True)
