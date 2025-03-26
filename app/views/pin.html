@@ -11,23 +11,63 @@
                 -webkit-appearance: none;
                 margin: 0;
             }
+            
+            body {
+                font-family: Arial, sans-serif;
+                background-color: #f4f4f9;
+                margin: 0;
+                padding: 0;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100vh;
+            }
+
+            h1 {
+                font-size: 24px;
+                color: #333;
+                margin-bottom: 20px;
+            }
+
+            #pin-form {
+                display: flex;
+                justify-content: center;
+                gap: 10px;
+                margin-bottom: 20px;
+            }
 
             .pin-input {
                 text-align: center;
-                width: 40px;
-                height: 40px;
+                width: 50px;
+                height: 50px;
                 font-size: 24px;
-                text-align: center;
-                margin: 2px;
-                border: 1px solid #CCC;
-                border-radius: 5px;
+                border: 2px solid #ccc;
+                border-radius: 8px;
+                transition: border-color 0.3s ease;
             }
+
+            .pin-input:focus {
+                border-color: #007bff;
+                outline: none;
+                box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+            }
+
             #error {
                 color: red;
                 font-weight: bold;
+                text-align: center;
+                margin-top: 10px;
             }
 
-
+            .container {
+                text-align: center;
+                background: #fff;
+                padding: 30px;
+                border-radius: 10px;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                width: 90%;
+                max-width: 400px;
+            }
         </style>
 
         <!-- Must be present for all back to front communication -->
@@ -35,16 +75,18 @@
         <script src="./scripts/pin.js" defer></script>
     </head>
     <body>
-        <h1>Please Input Your Pin Below</h1>
-        <p id="error"></p>
+        <div class="container">
+            <h1>Please Input Your Pin Below</h1>
+            <p id="error"></p>
 
-        <form id="pin-form">
-            <input class="pin-input" type="number" name="1" id="num1" placeholder="1" autocomplete="off" onkeydown="handleBackspace(event, this, 0)" oninput="moveNext(this, 0)" min="0" required>
-            <input class="pin-input" type="number" name="2" id="num2" placeholder="2" autocomplete="off" onkeydown="handleBackspace(event, this, 1)" oninput="moveNext(this, 1)" min="0" required>
-            <input class="pin-input" type="number" name="3" id="num3" placeholder="3" autocomplete="off" onkeydown="handleBackspace(event, this, 2)" oninput="moveNext(this, 2)" min="0" required>
-            <input class="pin-input" type="number" name="4" id="num4" placeholder="4" autocomplete="off" onkeydown="handleBackspace(event, this, 3)" oninput="moveNext(this, 3)" min="0" required>
-        </form>
-        
+            <form id="pin-form">
+                <input class="pin-input" type="number" name="1" id="num1" placeholder="1" autocomplete="off" onkeydown="handleBackspace(event, this, 0)" oninput="moveNext(this, 0)" min="0" required>
+                <input class="pin-input" type="number" name="2" id="num2" placeholder="2" autocomplete="off" onkeydown="handleBackspace(event, this, 1)" oninput="moveNext(this, 1)" min="0" required>
+                <input class="pin-input" type="number" name="3" id="num3" placeholder="3" autocomplete="off" onkeydown="handleBackspace(event, this, 2)" oninput="moveNext(this, 2)" min="0" required>
+                <input class="pin-input" type="number" name="4" id="num4" placeholder="4" autocomplete="off" onkeydown="handleBackspace(event, this, 3)" oninput="moveNext(this, 3)" min="0" required>
+            </form>
+        </div>
+
         <script>
             /**
              * Handle when an input box receives a value and move to the next box.

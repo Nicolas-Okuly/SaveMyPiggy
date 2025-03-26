@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create a pin</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        form {
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        h1, h2 {
+            color: #333333;
+        }
+
+        label {
+            display: block;
+            margin: 10px 0 5px;
+            font-weight: bold;
+            color: #555555;
+        }
+
+        input[type="number"] {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #cccccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        input[type="number"]:focus {
+            border-color: #007bff;
+            outline: none;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+        }
+
+        #pin-message {
+            font-size: 14px;
+            margin-top: -10px;
+            margin-bottom: 10px;
+        }
+
+        button {
+            background-color: #007bff;
+            color: #ffffff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <form id="new-pin">
+        <h1>Create Your PIN</h1>
+        <h2>Please type a 4-digit PIN below</h2>
+        <label for="newpin1">Enter PIN:</label>
+        <input type="number" name="newpin1" id="newpin1" max="9999" min="0000" oninput="sanitize()" required>
+        <label for="newpin2">Confirm PIN:</label>
+        <input type="number" name="newpin2" id="newpin2" max="9999" min="0000" oninput="sanitizeConfirm()" required>
+        <p id="pin-message" style="color: red;"></p>
+        <button type="button" onclick="submitPin()">Submit</button>
+        <script>
+            function sanitize() {
+                const inputField = document.getElementById("newpin1");
+                let value = inputField.value;
+
+                // Remove non-numeric characters
+                value = value.replace(/\D/g, '');
+
+                // Truncate to 4 digits if more than 4 are entered
+                if (value.length > 4) {
+                    value = value.slice(0, 4);
+                }
+
+                // Update the input field with sanitized value
+                inputField.value = value;
+            }
+
+            function sanitizeConfirm() {
+                const inputField = document.getElementById("newpin2");
+                let value = inputField.value;
+
+                // Remove non-numeric characters
+                value = value.replace(/\D/g, '');
+
+                // Truncate to 4 digits if more than 4 are entered
+                if (value.length > 4) {
+                    value = value.slice(0, 4);
+                }
+
+                // Update the input field with sanitized value
+                inputField.value = value;
+
+                // Check if both PINs match
+                const pin1 = document.getElementById("newpin1").value;
+                const messageElement = document.getElementById("pin-message");
+
+                if (value.length === 4 && pin1.length === 4) {
+                    if (pin1 === value) {
+                        confirmPin(value);
+                        messageElement.textContent = ""; // Clear any error message
+                    } else {
+                        messageElement.textContent = "Pins do not match. Please try again.";
+                    }
+                } else {
+                    messageElement.textContent = ""; // Clear message if input is incomplete
+                }
+            }
+
+            function confirmPin(pin) {
+                // Logic to confirm the PIN
+                console.error("PIN confirmed:", pin);
+            }
+
+            function submitPin() {
+                const pin1 = document.getElementById("newpin1").value;
+                const pin2 = document.getElementById("newpin2").value;
+                const messageElement = document.getElementById("pin-message");
+
+                if (pin1.length === 4 && pin2.length === 4 && pin1 === pin2) {
+                    console.error("PIN successfully submitted:", pin1);
+                    messageElement.textContent = "PIN successfully set!";
+                    messageElement.style.color = "green";
+                    window.location = `${window.location.host}pin.html?newpin=${pin1}`;
+                } else {
+                    messageElement.textContent = "Pins do not match. Please try again.";
+                    messageElement.style.color = "red";
+                }
+            }
+        </script>
+    </form>
+</body>
+</html>
