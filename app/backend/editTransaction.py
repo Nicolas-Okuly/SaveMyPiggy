@@ -19,6 +19,10 @@ class editTransaction(QObject):
         changes = json.loads(data)
 
         conn = get_db_connection()
+        if conn is None:
+            print("Failed to access database")
+            self.editTransactionSignal.emit(False)
+            return
         cursor = conn.cursor()
 
         changeID = int(changes["id"])

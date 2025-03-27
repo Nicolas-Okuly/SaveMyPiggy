@@ -24,6 +24,11 @@ class BalanceData(QObject):
         now = datetime.now()
 
         conn = get_db_connection()
+        if conn is None:
+            print("Failed to access database")
+            self.sendBalanceData.emit("")
+            return
+
         cursor = conn.cursor()
 
         # Get income data

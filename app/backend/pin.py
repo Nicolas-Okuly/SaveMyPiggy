@@ -11,6 +11,10 @@ class GetPin(QObject):
     def receivePinData(self):
         # send pin data or 0 if the pin is unset
         conn = get_db_connection()
+        if conn is None:
+            print("Failed to access database")
+            self.sendPinData.emit(-1)
+            return
         cursor = conn.cursor()
 
         cursor.execute('SELECT pin FROM pin')
@@ -32,6 +36,10 @@ class SetPin(QObject):
         # Set pin sent from the front, return true if successful and false if it failed (it shouldnt fail)
         print("Updating Pin to ", new_pin)
         conn = get_db_connection()
+        if conn is None:
+            print("Failed to access database")
+            self.sendSetPin.emit(False)
+            return
         cursor = conn.cursor()
 
         cursor.execute('UPDATE pin SET pin = ?', (new_pin,))

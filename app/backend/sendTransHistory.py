@@ -17,6 +17,10 @@ class sendTransHistory(QObject):
         updateData()
 
         conn = get_db_connection()
+        if conn is None:
+            print("Failed to access database")
+            self.sendTransHistory.emit("")
+            return
         cursor = conn.cursor()
         cursor.execute("SELECT * FROM transactions ORDER BY date DESC")
         transaction_history = cursor.fetchall()

@@ -16,6 +16,10 @@ class receiveTransaction(QObject):
         print(f'Got {data}')
 
         conn = get_db_connection()
+        if conn is None:
+            print("Failed to access database")
+            self.receiveTransaction.emit(False)
+            return
         cursor = conn.cursor()
 
         # Get the last transaction

@@ -49,6 +49,9 @@ def get_db_connection():
 # Check if the SQL file exists; if not, create an empty one
 def create_file_if_absent():
    conn = get_db_connection()
+   if conn is None:
+        print("Failed to access database")
+        return
    cursor = conn.cursor()
    cursor.execute('''
            CREATE TABLE IF NOT EXISTS transactions (
@@ -89,6 +92,9 @@ def rangeStart(date):
 # Updates the 'after' amounts after any change in transactions
 def updateData():
     conn = get_db_connection()
+    if conn is None:
+        print("Failed to access database")
+        return
     cursor = conn.cursor()
 
     cursor.execute("SELECT * FROM transactions ORDER BY date ASC")
@@ -106,4 +112,3 @@ def updateData():
     
     conn.commit()
     conn.close()
-    

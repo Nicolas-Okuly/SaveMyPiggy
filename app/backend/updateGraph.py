@@ -25,6 +25,10 @@ class updateGraph(QObject):
         now = datetime.now()
 
         conn = get_db_connection()
+        if conn is None:
+            print("Failed to access database")
+            self.updateGraphSignal.emit(False)
+            return
         cursor = conn.cursor()
 
         # Get income data
@@ -59,4 +63,5 @@ class updateGraph(QObject):
 
         graphs.BlankGraphs(noIncome, noExpense)
         
+        conn.close()
         self.updateGraphSignal.emit(True)

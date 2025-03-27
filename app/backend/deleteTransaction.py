@@ -16,6 +16,10 @@ class deleteTransaction(QObject):
         id = int(id)
 
         conn = get_db_connection()
+        if conn is None:
+            print("Failed to access database")
+            self.deleteTransactionSignal.emit(False)
+            return
         cursor = conn.cursor()
 
         cursor.execute(f"DELETE FROM transactions WHERE id = '{id}'")
