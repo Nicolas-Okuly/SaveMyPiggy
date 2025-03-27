@@ -104,10 +104,23 @@ function transactionButtonClick(button, deleteTransaction, editTransaction) {
                     } else { // Other input fields
                         if (cells[i].getElementsByTagName("input").length > 0) {
                             let input = cells[i].getElementsByTagName("input")[0];
-                            let pattern = /\d+(\.\d+)?/g;
-                            const matches = input.value.match(pattern) || [];
-                            let newValue = Number(matches.join(''))
                             let key = i === 0 ? "name" : i === 4 ? "category" : "amount";
+                            let newValue;
+
+                            if (key === "amount") {
+                                // Only apply regex check for the "amount" field
+                                let pattern = /\d+(\.\d+)?/g;
+                                const matches = input.value.match(pattern);
+                                if (matches && matches.length > 0) {
+                                    newValue = Number(matches.join(''));
+                                } else {
+                                    newValue = item[key]; // Fallback to original value
+                                }
+                            } else {
+                                // For other fields, use the input value directly
+                                newValue = input.value.trim() || item[key];
+                            }
+
                             if (newValue !== item[key]) {
                                 changes[key] = newValue;
                             }
