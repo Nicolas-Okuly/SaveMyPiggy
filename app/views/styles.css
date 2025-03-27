@@ -62,7 +62,7 @@ nav {
     width: 100%;
     padding: 15px 20%; /* Adjusted padding for better spacing */
     display: grid;
-    grid-template-columns: repeat(3,1fr);
+    grid-template-columns: repeat(4,1fr);
     justify-content: center; /* Center-align the navigation items */
     align-items: center; /* Ensure vertical alignment */
 }

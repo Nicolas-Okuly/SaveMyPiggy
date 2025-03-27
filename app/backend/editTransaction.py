@@ -23,11 +23,13 @@ class editTransaction(QObject):
 
         changeID = int(changes["id"])
         changesRow = changes["changes"] 
+        print(data)
 
         for key in changesRow.keys():
             if key == "amount":
                 changesRow[key] = round(float(changesRow[key]), 2)
-            cursor.execute(f'UPDATE transactions SET {key} = ? WHERE id = ?', (changesRow[key], changeID))
+            if changesRow[key] != 0:
+                cursor.execute(f'UPDATE transactions SET {key} = ? WHERE id = ?', (changesRow[key], changeID))
 
         conn.commit()
         conn.close()

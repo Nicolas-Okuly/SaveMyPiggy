@@ -65,9 +65,9 @@ class BalanceData(QObject):
 
         # Format the data
         balance_data = {
-            "balance": total_balance,
-            "income": total_income,
-            "expense": total_expense,
+            "balance": round(total_balance, 2),
+            "income": round(total_income, 2),
+            "expense": round(total_expense, 2),
             "incomeCats": income_category_data,
             "expenseCats": expense_category_data
         }
