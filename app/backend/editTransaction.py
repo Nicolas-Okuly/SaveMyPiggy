@@ -27,7 +27,6 @@ class editTransaction(QObject):
 
         changeID = int(changes["id"])
         changesRow = changes["changes"] 
-        print(data)
 
         for key in changesRow.keys():
             if key == "amount":

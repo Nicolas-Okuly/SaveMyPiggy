@@ -47,6 +47,11 @@ h1, h2, h3, h4, h5, h6 {
 }
 .money {
     font-family: var(--financial-font);
+    text-align: center;
+}
+
+.money h3{
+    font-size: 1.25em;
 }
 
 .hidden {
@@ -90,6 +95,8 @@ nav a:focus {
     }
 }
 
+.quick-actions
+
 .quick-row {
     display: flex;
     flex-direction: row;
@@ -119,16 +126,30 @@ nav a:focus {
 #modal-open {
     background-color: var(--accent-color);
     color: var(--text-color);
-    padding: 4px;
+    padding: 5px 10px;
     font-size: 1em;
     display: block;
     margin: 5px auto;
+    border-radius: 10px;
+}
+
+#help-btn{
+    background-color: var(--accent-color);
+    color: var(--text-color);
+    padding: 5px 10px;
+    font-size: 1em;
+    display: block;
+    margin: 5px auto;
+    border-radius: 10px;
+}
+
+#help-btn-link{
+    text-decoration: none;
 }
 
 /* Style the header at the top of the page */
 header {
     background-color: var(--element-background);
-    text-align: left;
     padding: 15px;
     font-size: 1.2em;
     color: var(--text-color);
@@ -136,10 +157,16 @@ header {
     justify-content: center;
     align-items: center;
 }
+
+header div{
+    text-align: center;
+}
+
 header img {
     width: 100px;
-    margin-left: 50px;
+    margin-left: 5em;
 }
+
 .vert-line {
     height: 100%;
     border: 1px solid black;

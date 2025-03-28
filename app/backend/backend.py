@@ -103,11 +103,12 @@ def updateData():
     currAfter = 0
 
     for trans in data:
+        print(dict(trans))
         currId = trans['id']
         if trans['type'] == 'expense':
-            currAfter -= float(trans['amount'])
+            currAfter -= trans['amount']
         else:
-            currAfter += float(trans['amount'])
+            currAfter += trans['amount']
         cursor.execute('UPDATE transactions SET after = ? WHERE id = ?', (currAfter, currId))
     
     conn.commit()
