@@ -103,7 +103,6 @@ def updateData():
     currAfter = 0
 
     for trans in data:
-        print(dict(trans))
         currId = trans['id']
         if trans['type'] == 'expense':
             currAfter -= trans['amount']

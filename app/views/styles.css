@@ -160,11 +160,14 @@ header {
 
 header div{
     text-align: center;
+    position: relative;
+    font-size: 1.1em;
 }
 
 header img {
     width: 100px;
-    margin-left: 5em;
+    position: absolute;
+    right: 20%;
 }
 
 .vert-line {
@@ -221,6 +224,11 @@ header img {
     color: white;
     border: none;
     font-size: 1.2em;
+}
+
+#transaction-form h3{
+    text-align: center;
+    font-size: 1.5em;
 }
 .close {
     color: #aaa;

@@ -37,7 +37,7 @@ class WebApp(QMainWindow):
     def __init__(self):
         # Set window title and window geometry
         super().__init__()
-        self.setWindowTitle("Finance Tracker")
+        self.setWindowTitle("SaveMyPiggy")
         self.setGeometry(100, 100, 800, 600)
         self.showMaximized()
         self.setWindowIcon(QIcon("icon.ico"))  # Set the window icon
