@@ -277,6 +277,11 @@ header img {
     font-weight: bold;
 }
 
+.green{
+    color: var(--accent-color);
+    font-weight: bold;
+}
+
 .container h2 {
     text-align: center;
     background-color: var(--dark-background);
