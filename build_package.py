@@ -5,7 +5,7 @@ import os
 
 # All files need to manually be added along with what directory they reside in
 # Keep views out on their own, files are weird
-files = [
+files = [   
     # app directory
     ("app/__init__.py", "app"),
     ("app/graphGenerator.py", "app"),
