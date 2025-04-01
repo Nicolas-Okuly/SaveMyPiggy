@@ -51,6 +51,7 @@ new QWebChannel(qt.webChannelTransport, function (channel) {
 
     document.getElementById("income-filter").addEventListener("change", (change) => {
         updateGraphs.updateGraph(change.target.value);
+        sendBalance.receiveBalanceData(change.target.value);
     });
 
     document.getElementById("transaction-form").addEventListener("submit", async (event) => {
@@ -76,7 +77,9 @@ function handleBalData(data) {
    const expenseCats = document.getElementById("expense-cats")
 
    const balInjection = `<span class="money ${data.balance <= 0 ? 'red':'green'}">$${data.balance}</span>`;
-
+   
+    incomeCats.innerHTML = ""
+    expenseCats.innerHTML = ""
 
     data.incomeCats.forEach(cat => {
         incomeCats.innerHTML += `<li>${cat.name} - $${cat.value} - ${cat.percentage}%</li>`
@@ -86,9 +89,9 @@ function handleBalData(data) {
         expenseCats.innerHTML += `<li>${cat.name} - $${cat.value} - ${cat.percentage}%</li>`
     });
 
-   balance.innerHTML += balInjection;
-   income.innerHTML += `${data.income}`;
-   expense.innerHTML += `${data.expense}`;
+   balance.innerHTML = balInjection;
+   income.innerHTML = `$${data.income}`;
+   expense.innerHTML = `$${data.expense}`;
 }
 
 // Handles and parses transaction data.

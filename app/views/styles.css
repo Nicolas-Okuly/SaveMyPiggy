@@ -187,6 +187,7 @@ header img {
 }
 @media (max-width: 630px) {
     header {
+        flex-direction: column;
         text-align: center;
         width: 100%;
         display: block;
