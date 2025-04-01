@@ -75,7 +75,7 @@ function handleBalData(data) {
    const incomeCats = document.getElementById("income-cats");
    const expenseCats = document.getElementById("expense-cats")
 
-   const balInjection = `<span class="money ${data.balance < 0 ? 'red':''}">$${data.balance}</span>`;
+   const balInjection = `<span class="money ${data.balance <= 0 ? 'red':'green'}">$${data.balance}</span>`;
 
 
     data.incomeCats.forEach(cat => {
