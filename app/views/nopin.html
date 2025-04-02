@@ -13,7 +13,28 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            flex-direction: column;
+        }
+
+        .misc-pages-header {
+            background-color: #E0E5E8;
+            padding: 0 3em;
+            margin-bottom: 3em;
+            font-size: 1.2em;
+            color: #000000;
+            width: 100vw;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .misc-pages-header h1{
+            text-align: center;
+            font-size: 3em;
+        }
+
+        .misc-pages-header img {
+            width: 100px;
         }
 
         form {
@@ -76,6 +97,12 @@
     </style>
 </head>
 <body>
+    <div class="misc-pages-header">
+        <img src="./icons/piggybank.svg" alt="Piggy bank">  
+        <h1>SaveMyPiggy</h1>
+        <!-- Piggy bank Icon -->
+        <img src="./icons/piggybank.svg" alt="Piggy bank">  
+    </div>
     <form id="new-pin">
         <h1>Create Your PIN</h1>
         <h2>Please type a 4-digit PIN below</h2>

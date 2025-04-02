@@ -28,7 +28,8 @@
 
         <!-- Navigation -->
         <nav>
-            <a href="#bkmrk1" class="border">Income and Expense</a>
+            <a onclick="openModal()" class="border">Add Transaction</a>
+            <a href="#bkmrk1" class="border">Income & Expense</a>
             <a href="#bkmrk2" class="border">Transaction History</a>
             <a href="help.html" class="border">Help</a>
             <a href="nopin.html">Update Pin</a>
@@ -36,6 +37,7 @@
 
         <!-- Application Header -->
         <header>
+            <div style="width: 100px;"></div>
             <div>
                 <h1>SaveMyPiggy</h1>
                 <!-- Show balance -->
@@ -80,6 +82,12 @@
 
             <!-- Add a transaction modal -->
             <div class="transaction-modal">
+                <div class="misc-pages-header">
+                    <img src="./icons/piggybank.svg" alt="Piggy bank">  
+                    <h1>SaveMyPiggy</h1>
+                    <!-- Piggy bank Icon -->
+                    <img src="./icons/piggybank.svg" alt="Piggy bank">  
+                </div>
                 <form id="transaction-form">
                     <span class="close">&times;</span>
 

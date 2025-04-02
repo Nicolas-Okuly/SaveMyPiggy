@@ -11,6 +11,12 @@ new QWebChannel(qt.webChannelTransport, (channel) => {
     setPin = channel.objects.setPin;
     getPin = channel.objects.getPin;
 
+    if (CheckableParams.newpin) {
+        setPin.receiveNewPin(CheckableParams.newpin);
+        window.location = "pin.html";
+        return;
+    }
+
     getPin.sendPinData.connect(async (message) => {
         if(message == 0) return handleNoPin();
         gotPin = message;
@@ -24,11 +30,6 @@ new QWebChannel(qt.webChannelTransport, (channel) => {
 });
 
 function handleNoPin() {
-    if (CheckableParams.newpin) {
-        setPin.receiveNewPin(CheckableParams.newpin);
-        window.location = window.location;
-        return;
-    }
     window.location = window.location.host + "nopin.html";
 }
 

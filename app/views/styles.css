@@ -68,7 +68,7 @@ nav {
     width: 100%;
     padding: 15px 20%; /* Adjusted padding for better spacing */
     display: grid;
-    grid-template-columns: repeat(4,1fr);
+    grid-template-columns: repeat(5,1fr);
     justify-content: center; /* Center-align the navigation items */
     align-items: center; /* Ensure vertical alignment */
 }
@@ -165,7 +165,7 @@ header {
     font-size: 1.2em;
     color: var(--text-color);
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
 }
 
@@ -177,8 +177,6 @@ header div{
 
 header img {
     width: 100px;
-    position: absolute;
-    right: 20%;
 }
 
 .vert-line {
@@ -201,6 +199,25 @@ header img {
     .quick-row > * { width: 90%; margin: 10px auto; }
 }
 
+.misc-pages-header {
+    background-color: var(--element-background);
+    padding: 15px;
+    font-size: 1.2em;
+    color: var(--text-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.misc-pages-header h1{
+    text-align: center;
+    font-size: 3em;
+}
+
+.misc-pages-header img {
+    width: 100px;
+}
+
 .transaction-modal {
     display: none;
     position: fixed;
@@ -212,10 +229,11 @@ header img {
     overflow: auto;
     background-color: var(--element-background);
 }
+
 #transaction-form {
     background-color: #eee;
     box-shadow: 1px 1px 25px #eee;
-    margin: 15% auto;
+    margin: 5% auto;
     border-radius: 12px;
     padding: 20px;
     width: max-content;
