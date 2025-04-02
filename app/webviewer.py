@@ -46,8 +46,8 @@ class WebApp(QMainWindow):
 
         # Initialize the webview and load the html files
         webview = QWebEngineView()
-        # webview.setContextMenuPolicy(False)
-        start_page = resource_path("views\pin.html").replace('\\', '/')
+        webview.setContextMenuPolicy(False)
+        start_page = resource_path("views\\pin.html").replace('\\', '/')
         webview.setUrl(QUrl(f"{start_page}"))
 
         # Enable CORs
