@@ -1,116 +1,127 @@
 @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300..700&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
+/* Import fonts from Google Fonts for consistent styling across different platforms */
+
 :root {
-    --light-background: #F4F7FA;
-    --element-background: #E0E5E8;
-    --dark-background: #2C3E50;
-    --accent-color: #27AE60;
-    --header-color: #1F2A44;
-    --text-color: #000000;
-    --header-font: Poppins, Helvetica, sans-serif;
-    --body-font: "Open Sans", Verdana, sans-serif;
-    --financial-font: "Fira Code", monospace;
+    --light-background: #F4F7FA; /* Light mode background */
+    --element-background: #E0E5E8; /* Background for UI elements */
+    --dark-background: #2C3E50; /* Dark mode background */
+    --accent-color: #27AE60; /* Green accent color for highlights */
+    --header-color: #1F2A44; /* Header text color */
+    --text-color: #000000; /* Default text color */
+    --header-font: Poppins, Helvetica, sans-serif; /* Font for headings */
+    --body-font: "Open Sans", Verdana, sans-serif; /* Font for body text */
+    --financial-font: "Fira Code", monospace; /* Monospace font for financial data */
 }
 
-/* Default global values */
+/* Reset default margin, padding, and box-sizing for a consistent layout */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    user-select: none;
-    -webkit-user-drag: none;
-}
-body {
-    background-color: var(--light-background);
-    color: var(--text-color);
-    font-family: var(--body-font);
-    font-size: 15px;
+    user-select: none; /* Prevents text selection */
+    -webkit-user-drag: none; /* Prevents elements from being dragged */
 }
 
-/* Set the scrollbar */
+body {
+    background-color: var(--light-background); /* Sets the background color */
+    color: var(--text-color); /* Default text color */
+    font-family: var(--body-font); /* Sets default font */
+    font-size: 15px; /* Default font size */
+}
+
+/* Custom scrollbar styles */
 body::-webkit-scrollbar {
-    width: 0.5em;
+    width: 0.5em; /* Sets the scrollbar width */
 }
 body::-webkit-scrollbar-track {
-    background-color: var(--element-background);
+    background-color: var(--element-background); /* Sets the scrollbar track color */
 }
 body::-webkit-scrollbar-thumb {
-    background-color: var(--dark-background);
-    opacity: 0.9;
+    background-color: var(--dark-background); /* Sets the scrollbar thumb color */
+    opacity: 0.9; /* Adjusts opacity for visibility */
     outline: none;
     border: none;
 }
 
-/* Set fonts */
+/* Set fonts and colors for headings */
 h1, h2, h3, h4, h5, h6 {
-    font-family: var(--header-font);
-    color: var(--header-color)
+    font-family: var(--header-font); /* Uses the defined header font */
+    color: var(--header-color); /* Uses the header color */
 }
+
 .money {
-    font-family: var(--financial-font);
+    font-family: var(--financial-font); /* Ensures financial numbers are displayed in monospace */
 }
 
 .hidden {
-    display: none;
+    display: none; /* Utility class to hide elements */
 }
 
-/* Navbar */
+/* Navbar styling */
 nav {
-    position: sticky;
-    z-index: 99;
+    position: sticky; /* Makes the navbar stay at the top */
+    z-index: 99; /* Ensures it stays above other elements */
     top: 0;
-    background-color: var(--dark-background);
+    background-color: var(--dark-background); /* Dark theme for contrast */
     width: 100%;
     padding: 12px;
     display: flex;
-    justify-content: space-evenly;
+    justify-content: space-evenly; /* Ensures evenly spaced items */
 }
+
 nav a, nav a:visited {
-    color: var(--accent-color);
+    color: var(--accent-color); /* Ensures consistent link color */
     text-decoration: none;
     font-size: 1.2em;
 }
+
 nav a:hover {
-    color: #21884c;
+    color: #21884c; /* Slightly darker green on hover */
     text-decoration: underline;
 }
 
+/* Header styles */
 h1 {
-    text-align: center;
-    background-color: var(--element-background);
-    color: var(--text-color);
+    text-align: center; /* Centers the heading */
+    background-color: var(--element-background); /* Light background for contrast */
+    color: var(--text-color); /* Default text color */
     padding: 24px;
-    font-size: 2em;
+    font-size: 2em; /* Larger font size for emphasis */
 }
+
 h2, h3 {
-    text-align: center;
-    background-color: var(--dark-background);
+    text-align: center; /* Centers the text */
+    background-color: var(--dark-background); /* Dark theme */
     color: white;
     padding: 12px;
     font-size: 1.7em;
 }
 
 h3 { 
-    font-size: 1.5rem; 
-    margin: 25px -25px;
+    font-size: 1.5rem; /* Slightly smaller than h2 */
+    margin: 25px -25px; /* Adjusts margins for spacing */
     margin-bottom: 0;
 }
 
+/* Container styles */
 .container {
-    background-color: var(--element-background);
+    background-color: var(--element-background); /* Light background */
     padding: 25px;
     width: max-content;
-    max-width: 50%;
+    max-width: 50%; /* Restricts container width */
     margin: 0 auto;
     margin-bottom: 15px;
-    border-radius: 0 0 12px 12px;
-}
-.container ul {
-    margin-left: 1em;
+    border-radius: 0 0 12px 12px; /* Rounded corners for a smooth look */
 }
 
+.container ul {
+    margin-left: 1em; /* Adds indentation to lists */
+}
+
+/* Responsive design adjustments */
 @media (max-width: 786px) {
     .container {
-        max-width: 100%;
+        max-width: 100%; /* Expands container to full width on smaller screens */
     }
 }

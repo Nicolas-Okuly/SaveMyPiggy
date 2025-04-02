@@ -183,6 +183,7 @@ header img {
     height: 100%;
     border: 1px solid black;
 }
+
 @media (max-width: 630px) {
     header {
         flex-direction: column;
@@ -227,11 +228,11 @@ header img {
     width: 100%;
     height: 100%;
     overflow: auto;
-    background-color: var(--element-background);
+    background-color: #f4f4f9;
 }
 
 #transaction-form {
-    background-color: #eee;
+    background-color: #ffffff;
     box-shadow: 1px 1px 25px #eee;
     margin: 5% auto;
     border-radius: 12px;
@@ -279,7 +280,7 @@ header img {
 }
 
 /* Button to blur sensitive data in the bottom right corner */
-#blur, #add {
+#blur, #add, #report {
     position: fixed;
     background-color: var(--accent-color);
     border: none;
@@ -288,16 +289,20 @@ header img {
     bottom: 15px;
     right: 15px;
 }
-#blur:hover, #add:hover {
+#blur:hover, #add:hover, #report:hover {
     background-color: #21884c;
     cursor: pointer;
 }
-#blur:focus, #add:focus {
+#blur:focus, #add:focus, #report:focus {
     outline: 2px solid var(--accent-color);
     outline-offset: 2px;
 }
 #add {
     bottom: 100px;
+    right: 15px;
+}
+#report {
+    bottom: 190px;
     right: 15px;
 }
 
