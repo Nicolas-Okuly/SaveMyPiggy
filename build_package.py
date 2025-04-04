@@ -20,6 +20,7 @@ files = [
     ("app/backend/sendTransHistory.py", "backend"),
     ("app/backend/updateGraph.py", "backend"),
     ("app/backend/pin.py", "backend"),
+    ("app/backend/report.py", "backend"),
 
     # app/views
     ("app/views/index.html", "views"),
@@ -50,6 +51,7 @@ files = [
     ("app/views/icons/piggybank.svg", "views/icons"),
     ("app/views/icons/trash.svg", "views/icons"),
     ("app/views/icons/add.svg", "views/icons"),
+    ("app/views/icons/report.svg", "views/icons"),
 
     # Root
     ("icon.ico", "./")
@@ -58,7 +60,8 @@ files = [
 # Create the exe
 PyInstaller.__main__.run([
     "app.py",
-   "--onefile",
+    "--name=SaveMyPiggy",
+    "--onefile",
     "--noconsole",
     "--windowed",
     "--icon=icon.ico",

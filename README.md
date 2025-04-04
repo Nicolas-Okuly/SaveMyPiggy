@@ -79,4 +79,101 @@ Contains the front-end of the webpage.
 
 ---
 
+# SaveMyPiggy Project Documentation
+
+## Overview
+SaveMyPiggy is a financial management application designed to help users track their expenses and savings. It features a user-friendly UI with a secure PIN authentication system.
+
+## Features
+- **Secure PIN Entry**: Users can create and confirm a 4-digit PIN for secure access.
+- **Expense Tracking**: Track transactions, view balance history, and generate reports.
+- **Data Visualization**: Interactive graphs to analyze spending trends.
+- **Cross-Platform Support**: Runs on Windows, Mac, and Linux using PyQt5.
+
+## Technologies Used
+- **Frontend**: HTML, CSS, JavaScript (UI Design)
+- **Backend**: Python (PyQt5, Flask, WebChannel API)
+- **Database**: SQLite (For storing transactions and PINs)
+- **Logging**: Python logging module for error handling
+
+## Installation
+### Prerequisites
+- Python 3.x
+- PyQt5 (`pip install PyQt5`)
+- Flask (`pip install Flask`)
+
+### Steps
+1. Create Virtual Environment:
+   ```sh
+   python -m venv .venv
+   ```
+2. Install dependencies:
+   ```sh
+   pip install -r requirements.txt
+   ```
+3. Run the application:
+   ```sh
+   python app/main.py
+   ```
+
+## File Structure
+```
+SaveMyPiggy/
+│── app/
+│   ├── __init__.py
+│   ├── graphGenerator.py           # Generate Graphs
+│   ├── webviewer.py      # Handles UI rendering with PyQt5
+│   ├── backend/
+│   │   ├── backend.py
+│   │   ├── balanceData.py
+│   │   ├── deleteTransaction.py
+│   │   ├── editTransaction.py
+│   │   ├── pin.py
+│   │   ├── receiveTransaction.py
+│   │   ├── report.py
+│   │   ├── sendTransHistory.py
+│   │   ├── updateGraph.py
+│── views/
+│   ├── graphs/
+│   │   ├── expense-pie.svg
+│   │   ├── income-pie.svg
+│   │   ├── incomevexpense.svg
+│   │   ├── placeholder.png
+│   ├── icons/
+│   │   ├── add.svg
+│   │   ├── edit.svg
+│   │   ├── eye-slash.svg
+│   │   ├── eye.svg
+│   │   ├── piggybank.svg
+│   │   ├── report.svg
+│   │   ├── trash.svg
+│   ├── scripts/
+│   │   ├── blur.js
+│   │   ├── communication.js
+│   │   ├── debug.js
+│   │   ├── modal.js
+│   │   ├── pin.js
+│   │   ├── qwebchannel.js
+│   │   ├── transactions.js
+│   ├── help.css
+│   ├── help.html 
+│   ├── index.html
+│   ├── nopin.html
+│   ├── pin.html
+│   ├── styles.css 
+│── app.py
+│── build_package.py
+│── icon.ico
+│── README.md
+│── requirements.txt
+│── transaction_report.xlsx
+```
+
+## Usage
+1. **Set a PIN**: Upon first launch, users must create a 4-digit PIN.
+2. **Navigate Dashboard**: View balance and recent transactions.
+3. **Edit Transactions**: Modify, delete, or add new transactions.
+4. **Generate Reports**: Get detailed spending insights.
+
+
 Big thanks to [SVG Repo](https://svgrepo.com) for miscellanous assets!
